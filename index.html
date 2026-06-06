@@ -1101,6 +1101,15 @@
           toggle.setAttribute('aria-expanded', 'false');
         });
       });
+
+      /* close mobile nav on tap outside */
+      document.addEventListener('click', function (e) {
+        if (!mobileNav.classList.contains('open')) return;
+        if (toggle.contains(e.target) || mobileNav.contains(e.target)) return;
+        mobileNav.classList.remove('open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
     }
   })();
   </script>

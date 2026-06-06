@@ -1289,8 +1289,10 @@ input, select, textarea {
 /* ── Nav mobile ─────────────────────────────────────── */
 @media (max-width: 56rem) {
   .nav-toggle { display: inline-flex; }
-  .nav-links, .nav-dropdown { display: none !important; }
-  .mobile-nav { display: flex; }
+  .nav-links, .header-cta { display: none !important; }
+  /* mobile-nav is hidden by default; only shown when .open is added by JS */
+  .mobile-nav { display: none; }
+  .mobile-nav.open { display: flex; }
 }
 @media (max-width: 30rem) {
   .mobile-nav a, .mnav-tab { font-size: 1rem; padding: .9rem .5rem; min-height: 48px; }
