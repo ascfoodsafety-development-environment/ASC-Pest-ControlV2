@@ -1,0 +1,13 @@
+{
+  "name": "ASC Pest Control",
+  "short_name": "ASC Pest",
+  "description": "Compliance-driven pest control & disinfection across Gqeberha and the Eastern Cape.",
+  "lang": "en-ZA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#16202C",
+  "theme_color": "#16202C",
+  "icons": [
+    { "src": "../../logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

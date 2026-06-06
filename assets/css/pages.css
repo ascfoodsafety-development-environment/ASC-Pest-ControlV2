@@ -1,0 +1,105 @@
+/* ASC Pest Control — Sub-page shared styles */
+
+/* Page hero (shorter, gradient only — no background image) */
+.page-hero {
+  background: radial-gradient(900px 500px at 60% -20%, rgba(244,84,30,.3), transparent 55%),
+              linear-gradient(180deg, #0b0f15 0%, var(--bg) 100%);
+  padding: clamp(5rem,6rem + 4vw,9rem) 0 clamp(3rem,3rem + 2vw,5rem);
+  text-align: center;
+}
+.page-hero .badge { margin-bottom: 1.2rem; }
+.page-hero h1 { font-size: clamp(2rem,1rem + 4.5vw,3.6rem); font-weight: 900; color: #fff; margin-bottom: .9rem; }
+.page-hero .hero-lead { color: #d3dae1; font-size: clamp(1rem,.95rem + .4vw,1.2rem); max-width: 52ch; margin: 0 auto 2rem; }
+.page-hero-actions { display: flex; flex-wrap: wrap; gap: .9rem; justify-content: center; }
+
+/* Image placeholder */
+.img-placeholder {
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .8rem; color: var(--muted); font-size: .85rem; font-weight: 500;
+  text-align: center; padding: 2rem;
+  min-height: 220px;
+}
+.img-placeholder span { max-width: 24ch; line-height: 1.4; }
+
+/* Split section: image + copy */
+.split { display: grid; gap: clamp(2rem,1rem + 4vw,4rem); align-items: center; }
+@media (min-width: 56rem) { .split { grid-template-columns: 1fr 1fr; } }
+.split.reverse > *:first-child { order: 2; }
+.split.reverse > *:last-child  { order: 1; }
+@media (max-width: 55.9rem) { .split.reverse > * { order: unset; } }
+
+/* Section with icon heading */
+.detail-section { padding-block: clamp(3rem,2rem + 4vw,6rem); }
+.detail-section:nth-child(even) { background: var(--bg-alt); }
+.detail-section h2 { font-size: clamp(1.5rem,1rem + 2.2vw,2.4rem); margin-bottom: .6rem; }
+.detail-section .section-lead { margin-bottom: 1.6rem; }
+
+/* Feature list */
+.feature-list { display: grid; gap: .75rem; margin: 1.4rem 0; list-style: none; padding: 0; }
+.feature-list li { display: flex; gap: .8rem; align-items: flex-start; color: var(--muted); font-size: .95rem; }
+.feature-list li::before { content: ""; flex: none; width: 20px; height: 20px; border-radius: 50%; background: rgba(244,84,30,.14); border: 1px solid rgba(244,84,30,.35); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23ff7a45' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8l3.5 3.5L13 5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: center; margin-top: 1px; }
+
+/* Info cards (3 or 4 up) */
+.info-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%,14rem),1fr)); }
+.info-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.5rem; transition: border-color .25s, transform .25s, box-shadow .25s; }
+.info-card:hover { border-color: var(--orange); transform: translateY(-3px); box-shadow: var(--shadow); }
+.info-card .card-icon { margin-bottom: .9rem; }
+.info-card h3 { font-size: 1rem; margin-bottom: .35rem; }
+.info-card p { color: var(--muted); font-size: .9rem; line-height: 1.55; }
+
+/* Standard badge row */
+.standard-badges { display: flex; flex-wrap: wrap; gap: .65rem; margin: 1.2rem 0; }
+.std-badge { display: inline-flex; align-items: center; gap: .45rem; background: rgba(244,84,30,.1); border: 1px solid rgba(244,84,30,.3); color: var(--orange-bright); font-size: .82rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: .45rem .9rem; border-radius: 999px; }
+
+/* Area cards */
+.area-cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%,16rem),1fr)); }
+.area-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.4rem 1.5rem; transition: border-color .25s, transform .25s; }
+.area-card:hover { border-color: var(--orange); transform: translateY(-3px); }
+.area-card h3 { font-size: 1rem; margin-bottom: .3rem; color: var(--fg); }
+.area-card p { color: var(--muted); font-size: .88rem; }
+.area-card .area-tag { display: inline-block; margin-top: .6rem; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--orange-bright); }
+
+/* Contact page */
+.contact-grid { display: grid; gap: 2.5rem; }
+@media (min-width: 56rem) { .contact-grid { grid-template-columns: 1fr 1.5fr; } }
+.contact-info h2 { font-size: clamp(1.4rem,1rem + 1.8vw,2rem); margin-bottom: .7rem; }
+.contact-method { display: flex; gap: 1rem; align-items: flex-start; padding: 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: .75rem; transition: border-color .2s; }
+.contact-method:hover { border-color: var(--orange); }
+.contact-method .card-icon { flex: none; }
+.contact-method strong { display: block; font-size: .9rem; color: var(--fg); }
+.contact-method a, .contact-method span { color: var(--muted); font-size: .9rem; }
+
+/* Form styles */
+.pg-form .field { margin-bottom: 1.2rem; }
+.pg-form label { display: block; font-size: .88rem; font-weight: 600; color: var(--muted); margin-bottom: .4rem; }
+.pg-form input, .pg-form textarea, .pg-form select {
+  width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: .75rem 1rem; color: var(--fg); font-family: inherit; font-size: .95rem;
+  transition: border-color .2s;
+}
+.pg-form input:focus, .pg-form textarea:focus, .pg-form select:focus { outline: none; border-color: var(--orange); }
+.pg-form textarea { resize: vertical; min-height: 110px; }
+.pg-form select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%23aab3bd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; }
+
+/* CTA band (reuse on sub-pages) */
+.page-cta { background: radial-gradient(900px 400px at 50% -10%, rgba(244,84,30,.4), transparent 60%), #0b0f15; text-align: center; padding-block: clamp(3.5rem,2rem + 5vw,6rem); }
+.page-cta h2 { font-size: clamp(1.9rem,1rem + 3vw,3rem); color: #fff; margin: .3rem 0 .7rem; }
+.page-cta .section-lead { margin: 0 auto 1.8rem; color: #cbd3db; }
+.page-cta-actions { display: flex; flex-wrap: wrap; gap: .9rem; justify-content: center; }
+
+/* Band section */
+.band { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding-block: clamp(2.5rem,2rem + 3vw,4rem); text-align: center; }
+.band h3 { font-size: clamp(1.2rem,.9rem + 1.5vw,1.8rem); margin-bottom: .6rem; }
+.band p { color: var(--muted); max-width: 52ch; margin: 0 auto 1.5rem; }
+
+/* Step number cards */
+.step-num { display: inline-flex; align-items: center; justify-content: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: rgba(244,84,30,.15); border: 1px solid rgba(244,84,30,.4); color: var(--orange-bright); font-size: .9rem; font-weight: 800; margin-bottom: .75rem; }
+
+/* FAQ details pattern */
+.faq-section { padding-block: clamp(2.5rem,2rem + 3vw,5rem); }
+.faq-section:nth-child(even) { background: var(--bg-alt); }
+.faq-category { margin-bottom: 2rem; }
+.faq-category h3 { font-size: clamp(1.2rem,1rem + 1vw,1.6rem); margin-bottom: 1rem; color: var(--fg); }

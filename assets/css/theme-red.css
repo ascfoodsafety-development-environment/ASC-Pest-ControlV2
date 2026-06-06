@@ -1,0 +1,83 @@
+/* Red/Black theme overrides adapted from provided CSS — applies red accents and removes colourful gradients */
+:root{
+  --bg: #080608;
+  --bg-2: #050304;
+  --bg-3: #020202;
+  --bg-card: rgba(6,4,6,0.85);
+  --neon: #d34300be; /* primary red accent */
+  --neon-dim: rgba(255,59,48,0.08);
+  --neon-glow: rgba(255,59,48,0.28);
+  --violet: #7a0b0b; /* deep red */
+  --violet-lt: #ff7b00dc;
+  --pink: #ff6b81;
+  --green: #00b894; /* keep for success */
+  --border: rgba(255,59,48,0.08);
+  --border-2: rgba(255,59,48,0.14);
+  --border-3: rgba(255,59,48,0.22);
+  --text: #bfc9d6;
+  --text-muted: #8b95a3;
+  --text-dim: #40464b;
+  --white: #eef3f5;
+  --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Neutralize bright multi-colour gradients — prefer solid or subtle red tints */
+.glow-border::before,
+.svc-card::before,
+.quote-card::before,
+.hero::before { background: linear-gradient(135deg, rgba(255,59,48,0.12), rgba(122,11,11,0.06)); }
+
+/* Replace cyan glows with red tone */
+.box-shadow-glow, .marquee .badge b, .sentinel-ping { box-shadow: 0 0 16px var(--neon-glow); }
+
+/* Buttons: remove multicolour gradient, use solid red accent */
+.btn-primary, .btn-wa, .nav__cta, .hero .btn-primary { background: linear-gradient(90deg, var(--neon), color-mix(in srgb, var(--neon) 88%, #000 12%)); color: #fff; }
+.btn-primary::after { background: rgba(255,255,255,0.06); }
+
+/* Hero title flow: remove rainbow animation, apply subtle red shimmer */
+.hero__title-line, .hero__accent { animation: none; background: none; color: var(--white); }
+.hero__accent { filter: drop-shadow(0 0 18px var(--neon-glow)); }
+
+/* Remove bright neon scanlines — keep subtle dark overlays */
+.hero__scan { background: repeating-linear-gradient(0deg, transparent, transparent 6px, rgba(0,0,0,0.02) 6px, rgba(0,0,0,0.02) 7px); }
+
+/* Accent lines and borders: red tones */
+.stat::after, .uc-card::before, .footer::before, .svc-card::before { background: linear-gradient(90deg, transparent, var(--neon), transparent); }
+
+/* Glow/orb colours switched to red tints */
+.hero__orb--1 { background: radial-gradient(circle, rgba(255,59,48,0.12) 0%, transparent 70%); }
+.hero__orb--2 { background: radial-gradient(circle, rgba(122,11,11,0.08) 0%, transparent 70%); }
+.hero__orb--3 { background: radial-gradient(circle, rgba(255,59,48,0.06) 0%, transparent 70%); }
+
+/* Card hover — red toned bloom */
+.svc-card:hover, .case-card:hover { box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 48px rgba(255,59,48,0.06); border-color: var(--border-2); }
+
+/* Replace neon link colours */
+a, .nav__links a:hover, .case-card__link { color: var(--neon); }
+
+/* Footer contact: prefer simple red dot instead of cyan */
+.footer__bottom-badge span { background: var(--neon); box-shadow: 0 0 8px rgba(255,59,48,0.35); }
+
+/* Remove multicolour title flow and similar animations to keep a darker, red-accented feel */
+@media (prefers-reduced-motion: reduce) {
+  .hero__orb, .svc-card, .case-card { animation: none !important; }
+}
+
+/* Force a high-contrast dark background where needed */
+.hero, .svc-showcase, .case-studies, .contact { background: linear-gradient(180deg, #000, #080608); }
+
+/* Keep radii minimal to match recent square theme */
+* { border-radius: 0 !important; }
+
+/* Make page content full-width: override container constraints from main CSS */
+.container {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-inline: 0 !important;
+  padding-inline: var(--gutter, 1rem) !important;
+}
+
+/* Section headers and centered blocks should expand full-bleed */
+.section-head { max-width: none !important; margin-inline: 0 !important; padding-inline: var(--gutter,1rem) !important; }
+.hero .lead { max-width: none !important; }
+.section { padding-inline: 0 !important; }

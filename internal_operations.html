@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operations Dashboard · ASC Pest Control Hub</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --bg:        #0b0f15;
+      --bg-alt:    #0f141b;
+      --surface:   #141b24;
+      --surface-2: #1a212b;
+      --surface-3: #1e2733;
+      --line:      #232d3a;
+      --fg:        #eef1f4;
+      --muted:     #8a96a3;
+      --muted-2:   #5a6470;
+      --orange:    #F4541E;
+      --orange-s:  rgba(244,84,30,.12);
+      --green:     #22c55e;
+      --green-s:   rgba(34,197,94,.12);
+      --amber:     #f59e0b;
+      --amber-s:   rgba(245,158,11,.12);
+      --blue:      #60a5fa;
+      --blue-s:    rgba(96,165,250,.12);
+      --red:       #f87171;
+      --red-s:     rgba(248,113,113,.12);
+      --purple:    #a78bfa;
+      --purple-s:  rgba(167,139,250,.12);
+      --font: "Inter", system-ui, sans-serif;
+      --radius: 12px;
+      --radius-lg: 18px;
+      --side-w: 230px;
+      --top-h: 62px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ── Sidebar ── */
+    .side {
+      width: var(--side-w);
+      min-height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+      padding: 0 0 1rem;
+      transition: transform .25s;
+    }
+    .side-logo {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+    }
+    .side-logo img { width: 30px; height: 30px; border-radius: 6px; }
+    .side-logo-text { font-size: .82rem; font-weight: 700; color: var(--fg); line-height: 1.2; }
+    .side-logo-text small { display: block; font-weight: 400; color: var(--muted); font-size: .72rem; }
+
+    .who {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .av {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: #fff;
+      font-size: .7rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .who-info .nm { font-size: .8rem; font-weight: 700; }
+    .who-info .rl { font-size: .71rem; color: var(--muted); }
+
+    .navlabel {
+      font-size: .67rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted-2);
+      padding: 1.1rem 1.25rem .35rem;
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .52rem 1.25rem;
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 0;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      border-left: 3px solid transparent;
+    }
+    .nav-link:hover { background: var(--surface-2); color: var(--fg); }
+    .nav-link.active { background: var(--surface-2); color: var(--fg); border-left-color: var(--orange); }
+    .nav-link svg { opacity: .6; flex-shrink: 0; }
+    .nav-link.active svg { opacity: 1; }
+
+    .side-foot {
+      margin-top: auto;
+      padding: .75rem 1.25rem;
+      font-size: .7rem;
+      color: var(--muted-2);
+      border-top: 1px solid var(--line);
+    }
+    .side-foot a { color: var(--muted); text-decoration: none; }
+    .side-foot a:hover { color: var(--fg); }
+
+    /* ── Main area ── */
+    .main-wrap {
+      margin-left: var(--side-w);
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      height: var(--top-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.75rem;
+      position: sticky; top: 0; z-index: 50;
+      gap: 1rem;
+    }
+    .topbar-left h1 { font-size: 1rem; font-weight: 700; }
+    .topbar-left .sub { font-size: .75rem; color: var(--muted); margin-top: .1rem; }
+    .topbar-right { display: flex; align-items: center; gap: .65rem; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .5rem 1rem; border-radius: var(--radius);
+      font-size: .8rem; font-weight: 600; cursor: pointer;
+      border: 1px solid transparent; transition: background .15s, border-color .15s, opacity .15s;
+      text-decoration: none; white-space: nowrap;
+    }
+    .btn-primary { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .btn-primary:hover { background: #d94418; border-color: #d94418; }
+    .btn-ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+    .btn-ghost:hover { background: var(--surface-2); }
+    .btn-sm { padding: .35rem .75rem; font-size: .75rem; }
+    .btn-danger { background: var(--red-s); color: var(--red); border-color: transparent; }
+    .btn-danger:hover { background: rgba(248,113,113,.22); }
+
+    /* ── Page content ── */
+    .page-content { padding: 1.5rem 1.75rem; display: none; flex-direction: column; gap: 1.25rem; }
+    .page-content.active { display: flex; }
+
+    /* ── Stats grid ── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    @media (max-width: 1100px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.25rem;
+    }
+    .stat-card .lab { font-size: .75rem; color: var(--muted); font-weight: 600; margin-bottom: .4rem; }
+    .stat-card .v { font-size: 1.9rem; font-weight: 800; letter-spacing: -.03em; line-height: 1; margin-bottom: .35rem; }
+    .stat-card .delta { font-size: .72rem; font-weight: 600; }
+    .delta.up { color: var(--green); }
+    .delta.down { color: var(--red); }
+    .delta.flat { color: var(--muted); }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .card-head h3 { font-size: .88rem; font-weight: 700; }
+    .card-head a { font-size: .75rem; color: var(--orange); text-decoration: none; }
+    .card-head a:hover { text-decoration: underline; }
+    .card-body { padding: 1rem 1.25rem; }
+    .card-body.pad-table { padding: .25rem 0; }
+
+    /* ── Two-col grid ── */
+    .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 900px) { .cols-2 { grid-template-columns: 1fr; } }
+
+    /* ── Kanban ── */
+    .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
+    @media (max-width: 1200px) { .kanban { grid-template-columns: repeat(2, 1fr); } }
+    .k-col { display: flex; flex-direction: column; gap: .5rem; }
+    .k-head {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--muted); padding-bottom: .4rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .k-head span:last-child {
+      background: var(--surface-2); border-radius: 20px;
+      padding: .1rem .45rem; font-size: .7rem;
+    }
+    .k-card {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: .7rem .8rem;
+    }
+    .k-name { font-size: .8rem; font-weight: 700; margin-bottom: .2rem; }
+    .k-sub { font-size: .72rem; color: var(--muted); margin-bottom: .4rem; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: .15rem .55rem; border-radius: 20px;
+      font-size: .68rem; font-weight: 700; letter-spacing: .02em;
+    }
+    .b-green  { background: var(--green-s);  color: var(--green); }
+    .b-amber  { background: var(--amber-s);  color: var(--amber); }
+    .b-blue   { background: var(--blue-s);   color: var(--blue); }
+    .b-red    { background: var(--red-s);    color: var(--red); }
+    .b-grey   { background: var(--surface-3); color: var(--muted); }
+    .b-orange { background: var(--orange-s); color: var(--orange); }
+    .b-purple { background: var(--purple-s); color: var(--purple); }
+
+    /* ── Tables ── */
+    table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    th { text-align: left; padding: .6rem 1.25rem; font-size: .7rem; font-weight: 700;
+         text-transform: uppercase; letter-spacing: .06em; color: var(--muted); border-bottom: 1px solid var(--line); }
+    td { padding: .7rem 1.25rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface-2); }
+    .t-strong { font-weight: 700; }
+    .t-sub { font-size: .71rem; color: var(--muted); margin-top: .15rem; }
+    .t-mono { font-family: "SF Mono", "Fira Code", monospace; font-size: .75rem; }
+
+    /* ── Technician rows ── */
+    .tech-list { display: flex; flex-direction: column; gap: .65rem; }
+    .tech-row { display: flex; align-items: center; gap: .75rem; }
+    .tech-av {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: var(--surface-3); color: var(--fg);
+      font-size: .7rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .tech-info { flex: 1; min-width: 0; }
+    .tech-name { font-size: .8rem; font-weight: 700; }
+    .tech-meta { font-size: .71rem; color: var(--muted); }
+    .progress-bar { height: 5px; background: var(--surface-3); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 3px; }
+
+    /* ── Notification dot ── */
+    .notif-btn { position: relative; }
+    .notif-dot {
+      position: absolute; top: 3px; right: 3px;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--orange);
+    }
+
+    /* ── Empty state ── */
+    .empty { text-align: center; padding: 2.5rem 1rem; color: var(--muted); font-size: .82rem; }
+    .empty svg { opacity: .3; margin-bottom: .75rem; display: block; margin-inline: auto; }
+
+    /* ── Loading spinner ── */
+    .spin {
+      width: 20px; height: 20px;
+      border: 2px solid var(--line);
+      border-top-color: var(--orange);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 2rem auto; display: block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── API status bar ── */
+    .api-bar {
+      display: flex; align-items: center; gap: .5rem;
+      font-size: .72rem; color: var(--muted);
+      padding: .4rem .75rem;
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+    }
+    .api-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+    .api-dot.offline { background: var(--red); }
+
+    /* ── Profile dropdown ── */
+    .profile-btn {
+      display: flex; align-items: center; gap: .5rem;
+      background: var(--surface-2); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: .4rem .75rem;
+      font-size: .78rem; font-weight: 600; color: var(--fg);
+      cursor: pointer; transition: background .15s;
+    }
+    .profile-btn:hover { background: var(--surface-3); }
+
+    /* ── Mobile hamburger ── */
+    .mob-toggle {
+      display: none; background: none; border: none;
+      color: var(--fg); cursor: pointer; padding: .4rem;
+    }
+    @media (max-width: 768px) {
+      .side { transform: translateX(-100%); }
+      .side.open { transform: translateX(0); }
+      .main-wrap { margin-left: 0; }
+      .mob-toggle { display: flex; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .kanban { grid-template-columns: 1fr; }
+      .page-content { padding: 1rem; }
+      .topbar { padding: 0 1rem; }
+    }
+
+    /* ── Overlay (mobile) ── */
+    .side-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 99;
+    }
+    .side-overlay.open { display: block; }
+
+    /* ── Access denied overlay ── */
+    #access-gate {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; flex-direction: column; gap: 1rem; text-align: center;
+    }
+    #access-gate h2 { font-size: 1.4rem; }
+    #access-gate p { color: var(--muted); max-width: 340px; }
+
+    /* ── Quick stats mini chart ── */
+    .mini-chart { display: flex; align-items: flex-end; gap: 2px; height: 32px; }
+    .mini-bar { flex: 1; background: var(--orange-s); border-radius: 2px; min-height: 4px; }
+    .mini-bar.hi { background: var(--orange); }
+  </style>
+</head>
+<body>
+
+<!-- Auth gate — shown while checking, hidden on success -->
+<div id="access-gate">
+  <span class="spin"></span>
+  <p style="color:var(--muted);font-size:.85rem">Verifying access…</p>
+</div>
+
+<!-- Sidebar overlay (mobile) -->
+<div class="side-overlay" id="sideOverlay"></div>
+
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<aside class="side" id="sidebar">
+  <a class="side-logo" href="index.html">
+    <img src="logo.png" alt="ASC" />
+    <span class="side-logo-text">ASC Pest Control<small>Operations Hub</small></span>
+  </a>
+
+  <div class="who">
+    <div class="av" id="sideAv">AS</div>
+    <div class="who-info">
+      <div class="nm" id="sideName">ASC Operations</div>
+      <div class="rl" id="sideRole">Admin · Gqeberha</div>
+    </div>
+  </div>
+
+  <div class="navlabel">Operations</div>
+  <a class="nav-link active" data-page="dashboard">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+    Dashboard
+  </a>
+  <a class="nav-link" data-page="leads">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+    Leads / CRM
+  </a>
+  <a class="nav-link" data-page="scheduling">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    Scheduling
+  </a>
+  <a class="nav-link" data-page="customers">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    Customers
+  </a>
+  <a class="nav-link" data-page="invoices">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+    Invoices
+  </a>
+
+  <div class="navlabel">Field</div>
+  <a class="nav-link" data-page="technicians">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>
+    Technicians
+  </a>
+  <a class="nav-link" data-page="reports">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+    Service Reports
+  </a>
+
+  <div class="side-foot">
+    <a href="index.html">← Back to website</a><br/>
+    ASC Pest Control Hub
+  </div>
+</aside>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<div class="main-wrap">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <button class="mob-toggle" id="mobToggle" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-left">
+        <h1 id="pageTitle">Operations Dashboard</h1>
+        <div class="sub" id="pageDate"></div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="api-bar" id="apiStatus">
+        <span class="api-dot" id="apiDot"></span>
+        <span id="apiLabel">Connecting…</span>
+      </div>
+      <button class="btn btn-ghost btn-sm notif-btn">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <div class="profile-btn" id="profileBtn">
+        <div class="av" style="width:24px;height:24px;font-size:.62rem;border-radius:6px" id="topAv">AS</div>
+        <span id="topName">Admin</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="signOutBtn">Sign out</button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE: DASHBOARD ══ -->
+  <div class="page-content active" id="page-dashboard">
+
+    <!-- Action row -->
+    <div style="display:flex;gap:.65rem;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        New booking
+      </button>
+      <button class="btn btn-primary btn-sm">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        New invoice
+      </button>
+      <button class="btn btn-ghost btn-sm" id="refreshBtn">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Refresh
+      </button>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card"><div class="lab">Leads this week</div><div class="v" id="s-leads">–</div><div class="delta up" id="s-leads-d">Loading…</div></div>
+      <div class="stat-card"><div class="lab">Bookings today</div><div class="v" id="s-bookings">11</div><div class="delta flat">4 completed · 7 scheduled</div></div>
+      <div class="stat-card"><div class="lab">Revenue (MTD)</div><div class="v" id="s-revenue">R 84,200</div><div class="delta up">▲ 12% vs May</div></div>
+      <div class="stat-card"><div class="lab">Overdue invoices</div><div class="v" id="s-overdue">R 12,640</div><div class="delta down">9 accounts</div></div>
+    </div>
+
+    <!-- Lead pipeline kanban -->
+    <div class="card">
+      <div class="card-head">
+        <h3>Lead pipeline</h3>
+        <a href="#" data-page="leads" class="nav-shortcut">Open CRM</a>
+      </div>
+      <div class="card-body">
+        <div class="kanban" id="kanbanBoard">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule + Technician load -->
+    <div class="cols-2">
+      <div class="card">
+        <div class="card-head"><h3>Today's schedule</h3><a href="#" data-page="scheduling" class="nav-shortcut">Full calendar</a></div>
+        <div class="card-body pad-table">
+          <table>
+            <thead><tr><th>Time</th><th>Job</th><th>Technician</th><th>Status</th></tr></thead>
+            <tbody id="scheduleBody">
+              <tr><td colspan="4"><span class="spin"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Technician load — today</h3><a href="#" data-page="technicians" class="nav-shortcut">Manage</a></div>
+        <div class="card-body">
+          <div class="tech-list" id="techList">
+            <span class="spin"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent invoices -->
+    <div class="card">
+      <div class="card-head"><h3>Recent invoices</h3><a href="#" data-page="invoices" class="nav-shortcut">All invoices</a></div>
+      <div class="card-body pad-table">
+        <table>
+          <thead><tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Issued</th><th>Status</th></tr></thead>
+          <tbody id="invoicesBody">
+            <tr><td colspan="5"><span class="spin"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /page-dashboard -->
+
+  <!-- ══ PAGE: LEADS ══ -->
+  <div class="page-content" id="page-leads">
+    <div style="display:flex;gap:.65rem;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        New lead
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>All leads</h3><span id="leadsTotal" style="font-size:.75rem;color:var(--muted)"></span></div>
+      <div class="card-body pad-table">
+        <table>
+          <thead><tr><th>Reference</th><th>Source</th><th>Service</th><th>Status</th><th>Created</th></tr></thead>
+          <tbody id="leadsTable"><tr><td colspan="5"><span class="spin"></span></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE: SCHEDULING ══ -->
+  <div class="page-content" id="page-scheduling">
+    <div class="card">
+      <div class="card-head"><h3>Schedule — today</h3></div>
+      <div class="card-body pad-table">
+        <table>
+          <thead><tr><th>Time</th><th>Job</th><th>Technician</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="schedFull">
+            <tr><td class="t-strong">08:00</td><td><div class="t-strong">Coega Dairy — line 2</div><div class="t-sub">Monthly FSMS service</div></td><td>Sipho M.</td><td><span class="badge b-green">Done</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="t-strong">09:30</td><td><div class="t-strong">Algoa Bakery</div><div class="t-sub">Cockroach control</div></td><td>Andile K.</td><td><span class="badge b-green">Done</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="t-strong">11:00</td><td><div class="t-strong">T. Mokoena (residential)</div><div class="t-sub">Quarterly service</div></td><td>Sipho M.</td><td><span class="badge b-amber">En route</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="t-strong">13:30</td><td><div class="t-strong">Markman Cold Store</div><div class="t-sub">Device inspection</div></td><td>Naledi P.</td><td><span class="badge b-blue">Scheduled</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="t-strong">15:00</td><td><div class="t-strong">Hartland Deli</div><div class="t-sub">First service</div></td><td>Andile K.</td><td><span class="badge b-blue">Scheduled</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE: CUSTOMERS ══ -->
+  <div class="page-content" id="page-customers">
+    <div class="card">
+      <div class="card-head"><h3>Customers</h3></div>
+      <div class="card-body pad-table">
+        <table>
+          <thead><tr><th>Name</th><th>Type</th><th>Last service</th><th>Next due</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="t-strong">Coega Dairy Group</td><td>Commercial</td><td class="t-sub">02 Jun 2026</td><td class="t-sub">02 Jul 2026</td><td><span class="badge b-green">Active</span></td></tr>
+            <tr><td class="t-strong">Algoa Bakery</td><td>Commercial</td><td class="t-sub">02 Jun 2026</td><td class="t-sub">02 Sep 2026</td><td><span class="badge b-green">Active</span></td></tr>
+            <tr><td class="t-strong">T. Mokoena</td><td>Residential</td><td class="t-sub">11 Mar 2026</td><td class="t-sub">11 Jun 2026</td><td><span class="badge b-amber">Due</span></td></tr>
+            <tr><td class="t-strong">Sundays River Citrus</td><td>Commercial</td><td class="t-sub">28 Feb 2026</td><td class="t-sub">28 May 2026</td><td><span class="badge b-red">Overdue</span></td></tr>
+            <tr><td class="t-strong">Hartland Deli</td><td>Commercial</td><td class="t-sub">–</td><td class="t-sub">05 Jun 2026</td><td><span class="badge b-blue">New</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE: INVOICES ══ -->
+  <div class="page-content" id="page-invoices">
+    <div style="display:flex;gap:.65rem">
+      <button class="btn btn-primary btn-sm">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        New invoice
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>All invoices</h3></div>
+      <div class="card-body pad-table">
+        <table>
+          <thead><tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Issued</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td class="t-strong t-mono">ASC-2026-0151</td><td>Coega Dairy Group</td><td>R6,400.00</td><td class="t-sub">02 Jun</td><td><span class="badge b-blue">Issued</span></td><td><button class="btn btn-ghost btn-sm">Send</button></td></tr>
+            <tr><td class="t-strong t-mono">ASC-2026-0150</td><td>Algoa Bakery</td><td>R1,850.00</td><td class="t-sub">02 Jun</td><td><span class="badge b-green">Paid</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+            <tr><td class="t-strong t-mono">ASC-2026-0148</td><td>Sundays River Citrus</td><td>R6,400.00</td><td class="t-sub">28 May</td><td><span class="badge b-red">Overdue</span></td><td><button class="btn btn-danger btn-sm">Chase</button></td></tr>
+            <tr><td class="t-strong t-mono">ASC-2026-0142</td><td>T. Mokoena</td><td>R540.00</td><td class="t-sub">27 May</td><td><span class="badge b-amber">Due 10 Jun</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE: TECHNICIANS ══ -->
+  <div class="page-content" id="page-technicians">
+    <div class="card">
+      <div class="card-head"><h3>Field technicians</h3></div>
+      <div class="card-body">
+        <div class="tech-list">
+          <div class="tech-row">
+            <div class="tech-av" style="background:var(--orange);color:#fff">SM</div>
+            <div class="tech-info">
+              <div class="tech-name">Sipho M.</div>
+              <div class="tech-meta">4 jobs today · Gqeberha route</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:80%;background:var(--orange)"></div></div>
+            </div>
+            <span class="badge b-amber">En route</span>
+          </div>
+          <div class="tech-row">
+            <div class="tech-av" style="background:var(--blue);color:#fff">AK</div>
+            <div class="tech-info">
+              <div class="tech-name">Andile K.</div>
+              <div class="tech-meta">3 jobs today · North route</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--blue)"></div></div>
+            </div>
+            <span class="badge b-green">Done</span>
+          </div>
+          <div class="tech-row">
+            <div class="tech-av" style="background:var(--green);color:#fff">NP</div>
+            <div class="tech-info">
+              <div class="tech-name">Naledi P.</div>
+              <div class="tech-meta">2 jobs today · Kariega route</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:40%;background:var(--green)"></div></div>
+            </div>
+            <span class="badge b-blue">Scheduled</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE: REPORTS ══ -->
+  <div class="page-content" id="page-reports">
+    <div class="card">
+      <div class="card-head"><h3>Service reports</h3></div>
+      <div class="card-body pad-table">
+        <table>
+          <thead><tr><th>Report</th><th>Client</th><th>Technician</th><th>Date</th><th>Audit status</th></tr></thead>
+          <tbody>
+            <tr><td class="t-strong t-mono">SR-2026-0088</td><td>Coega Dairy — line 2</td><td>Sipho M.</td><td class="t-sub">02 Jun 2026</td><td><span class="badge b-green">Audit-ready</span></td></tr>
+            <tr><td class="t-strong t-mono">SR-2026-0087</td><td>Algoa Bakery</td><td>Andile K.</td><td class="t-sub">02 Jun 2026</td><td><span class="badge b-green">Audit-ready</span></td></tr>
+            <tr><td class="t-strong t-mono">SR-2026-0082</td><td>Markman Cold Store</td><td>Naledi P.</td><td class="t-sub">20 May 2026</td><td><span class="badge b-amber">Pending sign-off</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<script>
+(function () {
+  /* ── Config ── */
+  var API = (location.protocol === 'file:' || location.port === '8080')
+    ? 'http://127.0.0.1:8000'
+    : location.origin;
+
+  var ALLOWED_ROLES = ['admin', 'branch_manager'];
+
+  /* ── Auth check ── */
+  var token = localStorage.getItem('asc_token') || sessionStorage.getItem('asc_token');
+  var role  = localStorage.getItem('asc_role')  || sessionStorage.getItem('asc_role');
+
+  function redirectToSignin() {
+    sessionStorage.setItem('asc_redirect', location.href);
+    location.href = 'signin.html';
+  }
+
+  if (!token || !role) { redirectToSignin(); return; }
+
+  /* Basic JWT expiry check (no signature verification — server validates) */
+  try {
+    var parts = token.split('.');
+    if (parts.length !== 3) throw new Error('bad token');
+    var payload = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+    if (payload.exp && Date.now() / 1000 > payload.exp) {
+      localStorage.removeItem('asc_token'); localStorage.removeItem('asc_role');
+      redirectToSignin(); return;
+    }
+  } catch (e) { redirectToSignin(); return; }
+
+  if (!ALLOWED_ROLES.includes(role)) {
+    document.getElementById('access-gate').innerHTML =
+      '<svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="color:#f87171"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' +
+      '<h2 style="color:#f87171">Access denied</h2>' +
+      '<p>This dashboard requires admin or branch manager access. You are signed in as <strong>' + role + '</strong>.</p>' +
+      '<a href="signin.html" class="btn btn-ghost" style="margin-top:.5rem">Sign in with another account</a>';
+    return;
+  }
+
+  /* ── Hide gate ── */
+  document.getElementById('access-gate').style.display = 'none';
+
+  /* ── Populate identity ── */
+  var initials = (payload.sub || 'AS').substring(0, 2).toUpperCase();
+  document.getElementById('sideAv').textContent  = initials;
+  document.getElementById('topAv').textContent   = initials;
+  document.getElementById('sideName').textContent = payload.sub || 'Admin';
+  document.getElementById('sideRole').textContent = role.replace('_', ' ') + ' · Gqeberha';
+  document.getElementById('topName').textContent  = role.replace('_', ' ');
+
+  /* ── Date header ── */
+  var now = new Date();
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('pageDate').textContent =
+    days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ' · Gqeberha branch';
+
+  /* ── Sign out ── */
+  document.getElementById('signOutBtn').addEventListener('click', function () {
+    ['asc_token','asc_role','asc_user_id','asc_branch_id'].forEach(function (k) {
+      localStorage.removeItem(k); sessionStorage.removeItem(k);
+    });
+    location.href = 'signin.html';
+  });
+
+  /* ── Sidebar navigation ── */
+  var navLinks = document.querySelectorAll('.nav-link[data-page], .nav-shortcut[data-page]');
+  var pageTitles = {
+    dashboard: 'Operations Dashboard', leads: 'Leads / CRM',
+    scheduling: 'Scheduling', customers: 'Customers',
+    invoices: 'Invoices', technicians: 'Technicians', reports: 'Service Reports'
+  };
+
+  function switchPage(id) {
+    document.querySelectorAll('.page-content').forEach(function (p) { p.classList.remove('active'); });
+    document.querySelectorAll('.nav-link').forEach(function (l) { l.classList.remove('active'); });
+    var page = document.getElementById('page-' + id);
+    if (page) page.classList.add('active');
+    var link = document.querySelector('.nav-link[data-page="' + id + '"]');
+    if (link) link.classList.add('active');
+    document.getElementById('pageTitle').textContent = pageTitles[id] || id;
+    /* close sidebar on mobile */
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sideOverlay').classList.remove('open');
+  }
+
+  navLinks.forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      switchPage(el.getAttribute('data-page'));
+    });
+  });
+
+  /* ── Mobile sidebar toggle ── */
+  document.getElementById('mobToggle').addEventListener('click', function () {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sideOverlay').classList.toggle('open');
+  });
+  document.getElementById('sideOverlay').addEventListener('click', function () {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sideOverlay').classList.remove('open');
+  });
+
+  /* ── API health check ── */
+  function checkApi() {
+    fetch(API + '/healthz').then(function (r) {
+      var online = r.ok;
+      document.getElementById('apiDot').className   = 'api-dot' + (online ? '' : ' offline');
+      document.getElementById('apiLabel').textContent = online ? 'API online' : 'API offline';
+    }).catch(function () {
+      document.getElementById('apiDot').className   = 'api-dot offline';
+      document.getElementById('apiLabel').textContent = 'API offline';
+    });
+  }
+  checkApi();
+
+  /* ── Fetch analytics from API ── */
+  function loadAnalytics() {
+    fetch(API + '/v1/analytics/summary', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    }).then(function (r) {
+      if (r.status === 401) { redirectToSignin(); return; }
+      return r.json();
+    }).then(function (d) {
+      if (!d) return;
+      document.getElementById('s-leads').textContent   = d.total_leads;
+      document.getElementById('s-leads-d').textContent = '▲ ' + d.new_leads + ' new leads';
+
+      /* Recent leads table */
+      var leadsBody = document.getElementById('leadsTable');
+      var leadsTotal = document.getElementById('leadsTotal');
+      if (leadsTotal) leadsTotal.textContent = d.total_leads + ' total';
+      if (d.recent_leads && d.recent_leads.length) {
+        leadsBody.innerHTML = d.recent_leads.map(function (l) {
+          var statusClass = { new: 'b-blue', contacted: 'b-amber', quoted: 'b-purple', won: 'b-green', lost: 'b-grey' }[l.status] || 'b-grey';
+          var date = l.created_at ? new Date(l.created_at).toLocaleDateString('en-ZA', {day:'2-digit',month:'short'}) : '–';
+          var svcs = Array.isArray(l.service_interest) ? l.service_interest.join(', ') : (l.service_interest || '–');
+          return '<tr>' +
+            '<td class="t-strong t-mono">' + (l.reference || '–') + '</td>' +
+            '<td>' + (l.source || '–') + '</td>' +
+            '<td class="t-sub">' + svcs + '</td>' +
+            '<td><span class="badge ' + statusClass + '">' + l.status + '</span></td>' +
+            '<td class="t-sub">' + date + '</td>' +
+          '</tr>';
+        }).join('');
+      } else {
+        leadsBody.innerHTML = '<tr><td colspan="5" class="empty">No leads yet.</td></tr>';
+      }
+    }).catch(function () {
+      /* API unavailable — leave mock data in place */
+    });
+  }
+  loadAnalytics();
+
+  /* ── Refresh button ── */
+  document.getElementById('refreshBtn').addEventListener('click', function () {
+    checkApi(); loadAnalytics();
+  });
+
+  /* ── Render static mock data (schedule, technicians, invoices, kanban) ── */
+  document.getElementById('kanbanBoard').innerHTML = [
+    { stage: 'New', count: 6, cards: [
+      { name: 'Blue Horizon Foods', sub: 'Commercial · FSSC site', badge: 'b-blue', label: 'Web form' },
+      { name: 'M. Booysen',         sub: 'Residential · rodents',  badge: 'b-orange', label: 'Sentinel' }
+    ]},
+    { stage: 'Contacted', count: 5, cards: [
+      { name: 'Algoa Bakery',  sub: 'Commercial · cockroaches', badge: 'b-grey',  label: 'Phone' },
+      { name: 'Sunrise Spaza', sub: 'Once-off · flies',         badge: 'b-blue',  label: 'Web form' }
+    ]},
+    { stage: 'Quoted', count: 4, cards: [
+      { name: 'Sundays River Citrus', sub: 'Contract · R6,400/qtr', badge: 'b-amber', label: 'Awaiting' }
+    ]},
+    { stage: 'Won', count: 8, cards: [
+      { name: 'Hartland Deli', sub: 'Monthly · R1,200', badge: 'b-green', label: 'Converted' }
+    ]}
+  ].map(function (col) {
+    return '<div class="k-col"><div class="k-head"><span>' + col.stage + '</span><span>' + col.count + '</span></div>' +
+      col.cards.map(function (c) {
+        return '<div class="k-card"><div class="k-name">' + c.name + '</div><div class="k-sub">' + c.sub + '</div><span class="badge ' + c.badge + '">' + c.label + '</span></div>';
+      }).join('') + '</div>';
+  }).join('');
+
+  document.getElementById('scheduleBody').innerHTML = [
+    { time: '08:00', job: 'Coega Dairy — line 2', sub: 'Monthly FSMS service', tech: 'Sipho M.',  badge: 'b-green',  label: 'Done' },
+    { time: '09:30', job: 'Algoa Bakery',          sub: 'Cockroach control',    tech: 'Andile K.', badge: 'b-green',  label: 'Done' },
+    { time: '11:00', job: 'T. Mokoena (residential)', sub: 'Quarterly service', tech: 'Sipho M.',  badge: 'b-amber',  label: 'En route' },
+    { time: '13:30', job: 'Markman Cold Store',    sub: 'Device inspection',    tech: 'Naledi P.', badge: 'b-blue',   label: 'Scheduled' },
+    { time: '15:00', job: 'Hartland Deli',         sub: 'First service',        tech: 'Andile K.', badge: 'b-blue',   label: 'Scheduled' }
+  ].map(function (r) {
+    return '<tr><td class="t-strong">' + r.time + '</td>' +
+      '<td><div class="t-strong">' + r.job + '</div><div class="t-sub">' + r.sub + '</div></td>' +
+      '<td>' + r.tech + '</td>' +
+      '<td><span class="badge ' + r.badge + '">' + r.label + '</span></td></tr>';
+  }).join('');
+
+  document.getElementById('techList').innerHTML = [
+    { av: 'SM', name: 'Sipho M.',  meta: '4 jobs · Gqeberha route', pct: 80, col: 'var(--orange)' },
+    { av: 'AK', name: 'Andile K.', meta: '3 jobs · North route',    pct: 60, col: 'var(--blue)' },
+    { av: 'NP', name: 'Naledi P.', meta: '2 jobs · Kariega route',  pct: 40, col: 'var(--green)' }
+  ].map(function (t) {
+    return '<div class="tech-row">' +
+      '<div class="tech-av" style="background:' + t.col + ';color:#fff">' + t.av + '</div>' +
+      '<div class="tech-info"><div class="tech-name">' + t.name + '</div>' +
+      '<div class="tech-meta">' + t.meta + '</div>' +
+      '<div class="progress-bar"><div class="progress-fill" style="width:' + t.pct + '%;background:' + t.col + '"></div></div>' +
+      '</div></div>';
+  }).join('');
+
+  document.getElementById('invoicesBody').innerHTML = [
+    { ref: 'ASC-2026-0151', client: 'Coega Dairy Group',     amt: 'R6,400.00', date: '02 Jun', badge: 'b-blue',  label: 'Issued' },
+    { ref: 'ASC-2026-0150', client: 'Algoa Bakery',          amt: 'R1,850.00', date: '02 Jun', badge: 'b-green', label: 'Paid' },
+    { ref: 'ASC-2026-0148', client: 'Sundays River Citrus',  amt: 'R6,400.00', date: '28 May', badge: 'b-red',   label: 'Overdue' },
+    { ref: 'ASC-2026-0142', client: 'T. Mokoena',            amt: 'R540.00',   date: '27 May', badge: 'b-amber', label: 'Due 10 Jun' }
+  ].map(function (i) {
+    return '<tr><td class="t-strong t-mono">' + i.ref + '</td><td>' + i.client + '</td>' +
+      '<td>' + i.amt + '</td><td class="t-sub">' + i.date + '</td>' +
+      '<td><span class="badge ' + i.badge + '">' + i.label + '</span></td></tr>';
+  }).join('');
+
+})();
+</script>
+</body>
+</html>

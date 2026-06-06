@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ASC Pest Control | Sign In</title>
+  <meta name="description" content="Sign in to ASC Pest Control for audit-ready service history, compliance documents and Integrated Pest Management account access." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/theme-red.css" />
+  <style>
+    .auth-shell {
+      min-height: 100vh;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at top right, oklch(60% 0.12 80 / .08), transparent 24%),
+        radial-gradient(circle at 15% 10%, oklch(60% 0.12 80 / .08), transparent 18%),
+        linear-gradient(180deg, var(--ink-950), var(--ink-900));
+    }
+    .auth-layout {
+      width: min(1180px, calc(100% - 2rem));
+      display: grid;
+      gap: 2.5rem;
+      align-items: stretch;
+      min-height: calc(100vh - 3.5rem);
+      grid-template-columns: minmax(30rem, 48%) minmax(26rem, 42%);
+    }
+    @media (max-width: 64rem) {
+      .auth-layout { grid-template-columns: 1fr; min-height: auto; }
+    }
+    .auth-panel {
+      border-radius: 2rem;
+      padding: clamp(2rem, 2.5vw, 3rem);
+      background: rgba(9, 16, 28, 0.94);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 42px 90px rgba(0,0,0,0.32);
+    }
+    .auth-hero-panel {
+      display: grid;
+      gap: 1.8rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 100%;
+    }
+    .auth-hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(10,18,34,.72), rgba(6,10,18,.38));
+      pointer-events: none;
+    }
+    .auth-hero-panel > * { position: relative; z-index: 1; }
+    .auth-form-panel { display: grid; gap: 1.5rem; min-height: 100%; }
+    .auth-form-stack { display: grid; gap: 0.8rem; margin-bottom: 0.75rem; }
+    .auth-form-stack h2 { margin: 0; font-size: clamp(2rem, 2.4vw, 2.8rem); line-height: 1.02; color: #fff; }
+    .auth-form-stack p { margin: 0; color: var(--ink-300); line-height: 1.75; }
+    .hero-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+    .hero-visual { border-radius: 1.9rem; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+    .hero-visual img { min-height: 18rem; width: 100%; height: auto; }
+    .auth-hero-stats {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .hero-stat {
+      padding: 1.25rem 1.35rem;
+      border-radius: 1.5rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-stat strong { display: block; margin-bottom: 0.7rem; color: #fff; font-size: 1rem; }
+    .hero-stat p { margin: 0; color: var(--ink-300); line-height: 1.6; font-size: .95rem; }
+    .auth-form-grid { display: grid; gap: 1.25rem; }
+    .auth-form-grid .field { display: grid; gap: 0.5rem; }
+    .auth-form-grid label { color: var(--ink-300); font-weight: 600; }
+    .auth-form-grid input { width: 100%; padding: 1rem 1.1rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: #fff; outline: none; }
+    .auth-form-grid input::placeholder { color: rgba(255,255,255,0.55); }
+    .auth-form-grid input:focus { border-color: rgba(92,117,255,0.85); box-shadow: 0 0 0 4px rgba(92,117,255,0.12); }
+    .field-inline { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
+    .auth-cta-wrap { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 0.5rem; }
+    .auth-form-panel .auth-note { color: var(--ink-400); }
+    .auth-portal-features { display: grid; gap: 1rem; padding: 1.4rem 1.35rem; border-radius: 1.5rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+    .auth-portal-feature strong { color: #fff; display: block; margin-bottom: 0.45rem; }
+    .auth-portal-feature p { margin: 0; color: var(--ink-300); line-height: 1.65; }
+    .auth-marquee { margin-top: 0; }
+    @media (max-width: 48rem) {
+      .auth-layout { width: min(100%, calc(100% - 1.5rem)); }
+      .auth-hero-stats { grid-template-columns: 1fr; }
+      .field-inline { flex-direction: column; align-items: stretch; }
+      .auth-cta-wrap { justify-content: stretch; }
+      .auth-portal-features { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header" id="header">
+    <div class="container nav">
+      <a class="brand" href="index.html" aria-label="ASC Pest Control home">
+        <img src="logo.png" alt="ASC Pest Control logo" width="40" height="40" />
+        <span>ASC Pest Control<small></small></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html#services">Services</a>
+        <a href="index.html#industries">Industries</a>
+        <a href="index.html#compliance">Compliance</a>
+        <a href="index.html#areas">Areas</a>
+        <a href="index.html#faq">FAQ</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="nav-phone" href="tel:+27611383989">061 138 3989</a>
+        <a class="btn btn-primary magnetic" href="index.html#quote">Get a Quote</a>
+      </div>
+      <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <div>
+        <a href="index.html#services">Services</a>
+        <a href="index.html#industries">Industries</a>
+        <a href="index.html#compliance">Compliance</a>
+        <a href="index.html#areas">Service Areas</a>
+        <a href="index.html#faq">FAQ</a>
+        <a class="btn btn-primary" href="index.html#quote">Get a Quote</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="auth-shell">
+    <div class="container auth-layout">
+      <aside class="auth-panel auth-hero-panel reveal">
+        <div class="hero-top">
+          <div class="hero-logo-mark">
+            <img src="logo.png" alt="ASC Pest Control logo" width="56" height="56" />
+          </div>
+          <span class="eyebrow">Enterprise access</span>
+        </div>
+
+        <h1>Secure portal access for regulated sites.</h1>
+        <p>Log in to the ASC Pest Control portal to review inspection reports, compliance records, corrective-action logs and audit-ready pest-management documentation for your site.</p>
+
+        <div class="hero-visual">
+          <img src="assets/images/hero-pest-control.jpg" alt="Professional pest control technician on site" loading="lazy" />
+        </div>
+
+        <div class="auth-hero-stats">
+          <article class="hero-stat">
+            <strong>Audit-ready</strong>
+            <p>Designed for HACCP, BRCGS and FSSC 22000 facilities.</p>
+          </article>
+          <article class="hero-stat">
+            <strong>Evidence-backed</strong>
+            <p>Service history, corrective actions and device logs in one place.</p>
+          </article>
+          <article class="hero-stat">
+            <strong>Operational visibility</strong>
+            <p>Real-time access to site records and compliance findings.</p>
+          </article>
+          <article class="hero-stat">
+            <strong>Regulated-site support</strong>
+            <p>Designed for food, healthcare and hospitality operations that need fast, compliant access.</p>
+          </article>
+        </div>
+      </aside>
+
+      <section class="auth-panel auth-form-panel reveal">
+        <div class="auth-form-stack">
+          <span class="eyebrow">Sign in</span>
+          <h2>Access your compliance dashboard</h2>
+          <p>Enter your credentials to manage inspections, documentation and corrective actions from one secure portal.</p>
+        </div>
+
+        <!-- Step 1: identifier -->
+        <form class="auth-form-grid" id="stepIdForm" autocomplete="on">
+          <div class="field">
+            <label for="authIdentifier">Email or phone number</label>
+            <input id="authIdentifier" name="identifier" type="text"
+                   placeholder="you@example.com or 082 000 0000" required autocomplete="username" />
+          </div>
+
+          <div class="field field-inline">
+            <label class="checkbox"><input id="authRemember" name="remember" type="checkbox" /> <span>Remember this device</span></label>
+          </div>
+
+          <div id="stepIdError" style="display:none;color:#f87171;font-size:.82rem;padding:.5rem .75rem;background:rgba(248,113,113,.08);border-radius:.75rem;border:1px solid rgba(248,113,113,.2)"></div>
+
+          <div class="auth-cta-wrap">
+            <button type="submit" class="btn btn-primary magnetic" id="sendOtpBtn">
+              Send one-time code
+            </button>
+            <a class="btn btn-outline" href="index.html#contact">Request portal access</a>
+          </div>
+
+          <p class="auth-note">Need help? Call <a href="tel:+27611383989">061 138 3989</a>.</p>
+        </form>
+
+        <!-- Step 2: OTP code (hidden initially) -->
+        <form class="auth-form-grid" id="stepOtpForm" autocomplete="off" style="display:none">
+          <div style="padding:.75rem 1rem;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:.75rem;font-size:.82rem;color:#86efac">
+            A 6-digit code was sent to <strong id="otpTarget"></strong>. Enter it below.
+          </div>
+
+          <div class="field" style="text-align:center">
+            <label for="authOtp">One-time code</label>
+            <input id="authOtp" name="otp" type="text" inputmode="numeric" pattern="\d{6}"
+                   maxlength="6" placeholder="000000" required autocomplete="one-time-code"
+                   style="text-align:center;letter-spacing:.3em;font-size:1.4rem;font-weight:700" />
+          </div>
+
+          <div id="stepOtpError" style="display:none;color:#f87171;font-size:.82rem;padding:.5rem .75rem;background:rgba(248,113,113,.08);border-radius:.75rem;border:1px solid rgba(248,113,113,.2)"></div>
+
+          <div class="auth-cta-wrap">
+            <button type="submit" class="btn btn-primary magnetic" id="verifyOtpBtn">Verify &amp; sign in</button>
+            <button type="button" class="btn btn-outline" id="backToIdBtn">Change identifier</button>
+          </div>
+
+          <p class="auth-note" id="devCodeHint" style="display:none;color:#f6c000"></p>
+          <p class="auth-note">Need help? Call <a href="tel:+27611383989">061 138 3989</a>.</p>
+        </form>
+
+        <div class="auth-marquee" aria-label="Trusted enterprise capabilities">
+          <span class="marquee-eyebrow">Trusted by enterprise clients</span>
+          <div class="auth-marquee-list">
+            <span class="badge"><b>✓</b> HACCP aligned</span>
+            <span class="badge"><b>✓</b> BRCGS</span>
+            <span class="badge"><b>✓</b> FSSC 22000</span>
+            <span class="badge"><b>✓</b> Integrated Pest Management</span>
+            <span class="badge"><b>✓</b> Hospital-grade Disinfection</span>
+            <span class="badge"><b>✓</b> Food &amp; Beverage specialists</span>
+            <span class="badge"><b>✓</b> Audit documentation</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script>
+  (function () {
+    var API = (location.protocol === 'file:' || location.port === '8080')
+      ? 'http://127.0.0.1:8000'
+      : location.origin;
+
+    var identifier = '';
+
+    /* Role → redirect map */
+    var ROLE_REDIRECT = {
+      admin:          'internal_operations.html',
+      branch_manager: 'internal_operations.html',
+      technician:     'hub/',
+      sales_agent:    'hub/',
+      customer:       'hub/'
+    };
+
+    /* ── Helper: show error ── */
+    function showError(elId, msg) {
+      var el = document.getElementById(elId);
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+    function clearError(elId) {
+      var el = document.getElementById(elId);
+      el.textContent = '';
+      el.style.display = 'none';
+    }
+
+    /* ── Step 1: request OTP ── */
+    document.getElementById('stepIdForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearError('stepIdError');
+      var btn = document.getElementById('sendOtpBtn');
+      identifier = document.getElementById('authIdentifier').value.trim();
+      if (!identifier) return;
+
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+
+      fetch(API + '/v1/auth/otp/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: identifier })
+      })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (res) {
+        if (!res.ok) {
+          showError('stepIdError', res.data.detail || 'Could not send code. Please try again.');
+          btn.textContent = 'Send one-time code';
+          btn.disabled = false;
+          return;
+        }
+        /* Show OTP step */
+        document.getElementById('stepIdForm').style.display = 'none';
+        document.getElementById('stepOtpForm').style.display = '';
+        document.getElementById('otpTarget').textContent = identifier;
+        /* Dev hint: if backend returns the code, show it */
+        if (res.data.dev_code) {
+          var hint = document.getElementById('devCodeHint');
+          hint.textContent = 'Dev mode — your code is: ' + res.data.dev_code;
+          hint.style.display = 'block';
+        }
+        document.getElementById('authOtp').focus();
+      })
+      .catch(function () {
+        showError('stepIdError', 'Network error. Is the API running?');
+        btn.textContent = 'Send one-time code';
+        btn.disabled = false;
+      });
+    });
+
+    /* ── Back button ── */
+    document.getElementById('backToIdBtn').addEventListener('click', function () {
+      document.getElementById('stepOtpForm').style.display = 'none';
+      document.getElementById('stepIdForm').style.display = '';
+      document.getElementById('sendOtpBtn').textContent = 'Send one-time code';
+      document.getElementById('sendOtpBtn').disabled = false;
+      clearError('stepOtpError');
+    });
+
+    /* ── Step 2: verify OTP ── */
+    document.getElementById('stepOtpForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearError('stepOtpError');
+      var code = document.getElementById('authOtp').value.trim();
+      var btn  = document.getElementById('verifyOtpBtn');
+      if (!code) return;
+
+      btn.textContent = 'Verifying…';
+      btn.disabled = true;
+
+      fetch(API + '/v1/auth/otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: identifier, code: code })
+      })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
+      .then(function (res) {
+        if (!res.ok) {
+          var msg = res.data.detail || 'Incorrect code. Please try again.';
+          showError('stepOtpError', msg);
+          btn.textContent = 'Verify & sign in';
+          btn.disabled = false;
+          return;
+        }
+
+        var d    = res.data;
+        var store = document.getElementById('authRemember').checked ? localStorage : sessionStorage;
+        store.setItem('asc_token',     d.access_token);
+        store.setItem('asc_role',      d.role);
+        store.setItem('asc_user_id',   d.user_id  || '');
+        store.setItem('asc_branch_id', d.branch_id || '');
+
+        /* Redirect based on role */
+        var dest = ROLE_REDIRECT[d.role] || 'hub/';
+        var pending = sessionStorage.getItem('asc_redirect');
+        if (pending) { sessionStorage.removeItem('asc_redirect'); dest = pending; }
+        location.href = dest;
+      })
+      .catch(function () {
+        showError('stepOtpError', 'Network error. Is the API running?');
+        btn.textContent = 'Verify & sign in';
+        btn.disabled = false;
+      });
+    });
+  })();
+  </script>
+  <script src="assets/js/assistant.js" defer></script>
+</body>
+</html>
