@@ -629,8 +629,10 @@ section { padding-block: clamp(3.5rem, 2rem + 5vw, 6.5rem); }
 .sentinel-icon-btn {
   display: grid;
   place-items: center;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   border-radius: 7px;
   border: none;
   background: rgba(255,255,255,.07);

@@ -502,6 +502,8 @@
 
   function startDrag(e) {
     if (!panel.classList.contains("open")) return;
+    /* Don't intercept taps on buttons inside the header */
+    if (e.target && e.target.closest("button")) return;
     isDragging = true;
     const cx = e.clientX || e.touches?.[0]?.clientX || 0;
     const cy = e.clientY || e.touches?.[0]?.clientY || 0;
