@@ -329,7 +329,7 @@
         <p class="section-lead">Tell us about your site, audit standard and current pest management situation — we'll contact you within one business day to discuss a compliance programme.</p>
       </div>
       <form class="pg-form" style="max-width: 680px; margin: 0 auto;" action="#" method="post" novalidate>
-        <div style="display: grid; gap: 0 1.5rem; grid-template-columns: 1fr 1fr;">
+        <div class="pg-form-row">
           <div class="field">
             <label for="ca-name">Your Name *</label>
             <input type="text" id="ca-name" name="name" required placeholder="e.g. Jane Smith" />
@@ -339,7 +339,7 @@
             <input type="text" id="ca-org" name="organisation" required placeholder="e.g. XYZ Foods (Pty) Ltd" />
           </div>
         </div>
-        <div style="display: grid; gap: 0 1.5rem; grid-template-columns: 1fr 1fr;">
+        <div class="pg-form-row">
           <div class="field">
             <label for="ca-email">Email Address *</label>
             <input type="email" id="ca-email" name="email" required placeholder="jane@company.co.za" />
@@ -450,6 +450,10 @@
   const header = document.getElementById('siteHeader');
   const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
   onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+
+  window.ASC_API_BASE = (location.protocol === 'file:' || location.port === '8080')
+    ? 'http://127.0.0.1:8000' : location.origin;
 </script>
+<script src="assets/js/page-forms.js" defer></script>
 </body>
 </html>

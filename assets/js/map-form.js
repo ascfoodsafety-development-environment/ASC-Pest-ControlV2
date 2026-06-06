@@ -10,6 +10,12 @@
   const API = (window.ASC_API_BASE || "").replace(/\/$/, "");
   const PE = [-33.9608, 25.6022]; // Gqeberha default centre
 
+  /* ----------------------------------------------------------- maps (defined first — openModal references MAPS) */
+  const MAPS = {
+    commercial: { mapId: "mapCommercial", addr: "commAddress", lat: "commLat", lng: "commLng", map: null, marker: null },
+    residential: { mapId: "mapResidential", addr: "resAddress", lat: "resLat", lng: "resLng", map: null, marker: null },
+  };
+
   /* ----------------------------------------------------------- modal control */
   let lastFocus = null;
   function openModal(id) {
@@ -29,6 +35,11 @@
     setTimeout(() => { m.hidden = true; }, 220);
     lastFocus && lastFocus.focus && lastFocus.focus();
   }
+
+  /* expose globally so inline onclick and other scripts can call it */
+  window.ascOpenModal = openModal;
+  window.ascCloseModal = closeModal;
+
   $$("[data-open-modal]").forEach((b) => b.addEventListener("click", () => openModal(b.dataset.openModal)));
   $$(".amodal").forEach((m) => {
     $$("[data-close-modal]", m).forEach((b) => b.addEventListener("click", () => closeModal(m)));
@@ -40,12 +51,7 @@
   $$('a[href="#quote"]').forEach((a) =>
     a.addEventListener("click", (e) => { e.preventDefault(); openModal("commercialModal"); }));
 
-  /* ----------------------------------------------------------- maps */
-  const MAPS = {
-    commercial: { mapId: "mapCommercial", addr: "commAddress", lat: "commLat", lng: "commLng", map: null, marker: null },
-    residential: { mapId: "mapResidential", addr: "resAddress", lat: "resLat", lng: "resLng", map: null, marker: null },
-  };
-
+  /* ----------------------------------------------------------- map helpers */
   function ensureMap(cfg) {
     if (cfg.map) { cfg.map.invalidateSize(); return; }
     if (typeof L === "undefined") return;
@@ -129,7 +135,6 @@
   function handleSubmit(form, opts) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      // required native fields
       let ok = true;
       $$("input[required], select[required], textarea[required]", form).forEach((el) => {
         const bad = !el.value.trim(); el.style.borderColor = bad ? "var(--danger)" : ""; if (bad) ok = false;
@@ -137,14 +142,14 @@
       const services = $$('input[name="services"]:checked', form);
       if (services.length === 0) { ok = false; alert("Please tick at least one service."); }
       if (opts.clientType && !form.querySelector('input[name="clientType"]:checked')) { ok = false; alert("Please select Commercial or Industrial."); }
-      const lat = form.querySelector('input[name="latitude"]').value;
-      if (!lat) { ok = false; alert("Please set your location — type an address and press Find, use current location, or drop a pin."); }
+      const lat = form.querySelector('input[name="latitude"]')?.value || '';
+      const addr = form.querySelector('input[name="address"]')?.value?.trim() || '';
+      if (!lat && !addr) { ok = false; alert("Please enter your address, or drop a pin on the map."); }
       if (!ok) return;
 
       const fd = new FormData(form);
       const data = Object.fromEntries(fd);
       data.services = services.map((c) => c.value);
-      // best-effort persist; UI confirms regardless
       try {
         fetch(`${API}/v1/leads`, {
           method: "POST", headers: { "Content-Type": "application/json" },

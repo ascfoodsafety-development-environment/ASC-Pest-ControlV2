@@ -151,7 +151,8 @@
         btn.style.setProperty("--ty", "0px");
       });
     });
-  
+  }
+
   /* ---- Hero 'Talk to Sentinel' button wiring ---- */
   const heroTalk = document.getElementById('hero-talk-sentinel');
   const sentinelLauncher = document.getElementById('sentinel-launcher');

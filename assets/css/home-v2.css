@@ -178,10 +178,18 @@ ul { list-style: none; padding: 0; }
 .hero-bg img { width: 100%; height: 100%; object-fit: cover; }
 .hero-overlay {
   display: grid; align-items: center;
+  position: relative;
+}
+.hero-overlay::before {
+  content: "";
+  position: absolute; inset: 0;
   background:
     linear-gradient(90deg, rgba(11, 15, 21, .92) 0%, rgba(11, 15, 21, .78) 45%, rgba(11, 15, 21, .35) 100%),
     radial-gradient(1000px 500px at 80% -10%, rgba(244, 84, 30, .35), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
 }
+.hero-overlay > * { position: relative; z-index: 1; }
 .hero-inner { padding-block: clamp(3.5rem, 8vh, 6rem); max-width: 46rem; }
 .badge {
   display: inline-flex; align-items: center; gap: .5rem; font-size: .8rem; font-weight: 700;
@@ -200,7 +208,10 @@ ul { list-style: none; padding: 0; }
   padding: .65rem 1.25rem; border-radius: 999px;
   gap: .45rem; cursor: pointer;
   transition: background .2s, border-color .2s, transform .2s;
-  backdrop-filter: blur(6px);
+  position: relative; z-index: 1;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
 }
 .hero-sector-btn:hover { background: rgba(244,84,30,.18); border-color: var(--orange-bright); transform: translateY(-2px); }
 
@@ -892,6 +903,9 @@ img[src$=".svg"], img[src$=".png"] { image-rendering: -webkit-optimize-contrast;
   padding: 1.1rem 1rem; border: 1.5px solid var(--line);
   border-radius: var(--radius); background: var(--surface);
   color: var(--fg); transition: border-color .2s, transform .2s, box-shadow .2s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
 }
 .booking-choice:hover {
   border-color: var(--orange); transform: translateY(-3px);
@@ -912,7 +926,9 @@ img[src$=".svg"], img[src$=".png"] { image-rendering: -webkit-optimize-contrast;
 /* ========================================================= MODAL SYSTEM */
 .amodal {
   position: fixed; inset: 0; z-index: 1000;
-  display: grid; place-items: center; padding: 1rem;
+  display: grid; place-items: center;
+  padding: clamp(.5rem, 2vw, 1rem);
+  box-sizing: border-box;
 }
 .amodal[hidden] { display: none; }
 
@@ -920,28 +936,52 @@ img[src$=".svg"], img[src$=".png"] { image-rendering: -webkit-optimize-contrast;
   position: absolute; inset: 0;
   background: rgba(5,8,13,.78); backdrop-filter: blur(6px);
   opacity: 0; transition: opacity .25s ease;
+  cursor: pointer; touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .amodal.open .amodal-backdrop { opacity: 1; }
 
 .amodal-dialog {
   position: relative; z-index: 1;
-  width: min(640px, 100%); max-height: 92vh; overflow-y: auto;
+  /* Never wider than viewport minus padding on both sides */
+  width: min(640px, calc(100vw - clamp(1rem, 4vw, 2rem)));
+  max-height: min(92svh, 92vh, calc(100vh - 2rem));
+  overflow-y: auto; overflow-x: hidden;
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius-lg); box-shadow: var(--shadow);
-  padding: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1rem, 4vw, 2rem);
   transform: translateY(14px) scale(.97); opacity: 0;
   transition: transform .3s ease, opacity .25s ease;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  /* Prevent any child from breaking out */
+  word-break: break-word;
 }
 .amodal.open .amodal-dialog { transform: none; opacity: 1; }
+
+/* Bottom-sheet on narrow phones */
+@media (max-width: 480px) {
+  .amodal { padding: 0; align-items: flex-end; }
+  .amodal-dialog {
+    width: 100%;
+    max-height: min(92svh, 92vh);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 1.25rem 1rem 2rem;
+  }
+  .leaflet-map { height: 180px; }
+  /* Stack 2-col modal rows to single col */
+  .amodal-row { grid-template-columns: 1fr !important; }
+}
 .amodal-dialog::-webkit-scrollbar { width: 6px; }
 .amodal-dialog::-webkit-scrollbar-thumb { background: var(--line); border-radius: 6px; }
 
 .amodal-close {
   position: absolute; top: .9rem; right: .9rem;
-  width: 2.2rem; height: 2.2rem; border-radius: 50%;
+  width: 2.75rem; height: 2.75rem; border-radius: 50%;
   border: 1px solid var(--line); background: var(--surface-2);
   color: var(--fg); display: grid; place-items: center;
   cursor: pointer; transition: border-color .2s, color .2s; z-index: 2;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
 .amodal-close:hover { border-color: var(--orange); color: var(--orange-bright); }
 
@@ -961,11 +1001,13 @@ img[src$=".svg"], img[src$=".png"] { image-rendering: -webkit-optimize-contrast;
   margin-bottom: .38rem; color: var(--fg);
 }
 .field :is(input, select, textarea) {
-  width: 100%; padding: .85rem 1rem;
+  width: 100%; min-width: 0; padding: .85rem 1rem;
   border: 1px solid var(--line); border-radius: 10px;
   background: var(--surface-2); color: var(--fg);
-  font-size: .95rem; font-family: var(--font);
+  font-size: max(1rem, 16px); font-family: var(--font);
   transition: border-color .2s, box-shadow .2s;
+  min-height: 48px;
+  box-sizing: border-box;
 }
 .field :is(input, select, textarea):focus {
   outline: none; border-color: var(--orange);
@@ -1214,3 +1256,111 @@ input[type="date"], input[type="time"] { color-scheme: dark; }
   text-decoration: none;
 }
 .areas-popup a:hover { text-decoration: underline; }
+
+/* ==========================================================================
+   MOBILE OPTIMIZATION — comprehensive pass
+   ========================================================================== */
+
+/* Base touch targets & interaction */
+button, a, [role="button"], input, select, textarea, label {
+  -webkit-tap-highlight-color: transparent;
+}
+button, [role="button"] {
+  touch-action: manipulation;
+}
+
+/* Prevent iOS font-size zoom on inputs (must be ≥ 16px) */
+input, select, textarea {
+  font-size: max(1rem, 16px) !important;
+}
+
+/* ── Hero mobile ────────────────────────────────────── */
+@media (max-width: 48rem) {
+  .hero { min-height: 100svh; min-height: 100vh; }
+  .hero-inner { max-width: 100%; padding-block: clamp(5rem, 12vh, 7rem) clamp(2.5rem, 5vh, 4rem); }
+  .hero h1 { font-size: clamp(1.85rem, 7vw, 2.6rem); }
+  .hero-lead { font-size: 1rem; max-width: 100%; }
+  .hero-cta { gap: .6rem; }
+  .hero-cta .btn-lg { padding: .85rem 1.4rem; font-size: .95rem; width: 100%; justify-content: center; }
+  .hero-sector-btns { gap: .6rem; }
+  .hero-sector-btn { flex: 1 1 auto; justify-content: center; font-size: .85rem; padding: .7rem 1rem; }
+}
+
+/* ── Nav mobile ─────────────────────────────────────── */
+@media (max-width: 56rem) {
+  .nav-toggle { display: inline-flex; }
+  .nav-links, .nav-dropdown { display: none !important; }
+  .mobile-nav { display: flex; }
+}
+@media (max-width: 30rem) {
+  .mobile-nav a, .mnav-tab { font-size: 1rem; padding: .9rem .5rem; min-height: 48px; }
+}
+
+/* ── Sections mobile ────────────────────────────────── */
+@media (max-width: 48rem) {
+  section { padding-block: clamp(2.5rem, 6vw, 4rem); }
+  .section-head { margin-block-end: 1.5rem; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .svc-grid { grid-template-columns: 1fr; }
+  .ind-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Booking chooser mobile ─────────────────────────── */
+@media (max-width: 36rem) {
+  .booking-chooser { grid-template-columns: 1fr; max-width: 100%; }
+  .booking-choice { min-height: 56px; }
+}
+
+/* ── Modal mobile: bottom-sheet on small screens ────── */
+@media (max-width: 30rem) {
+  .amodal {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .amodal-dialog {
+    width: 100%;
+    max-height: min(96svh, 96vh);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 1.2rem 1rem 1.5rem;
+  }
+  .leaflet-map { height: 180px; }
+  .amodal-row { grid-template-columns: 1fr; }
+}
+
+/* ── Form fields mobile ─────────────────────────────── */
+@media (max-width: 48rem) {
+  .field :is(input, select, textarea) {
+    min-height: 48px;
+    padding: .8rem 1rem;
+  }
+  .field textarea { min-height: 90px; }
+  .service-ticks { grid-template-columns: 1fr 1fr; }
+  .amodal-row { gap: 0; }
+}
+
+/* ── Sentinel widget mobile ─────────────────────────── */
+@media (max-width: 30rem) {
+  .sentinel { bottom: 1rem; right: 1rem; }
+  .sentinel-panel {
+    width: calc(100vw - 1rem);
+    max-height: calc(100svh - 6rem);
+    left: .5rem;
+    right: .5rem;
+    position: fixed;
+    bottom: 5rem;
+  }
+}
+
+/* ── Footer mobile ──────────────────────────────────── */
+@media (max-width: 48rem) {
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .footer-links { columns: 2; }
+}
+
+/* ── Active states (touch feedback) ────────────────── */
+@media (hover: none) {
+  .btn:active { transform: scale(.97); }
+  .booking-choice:active { transform: scale(.98); border-color: var(--orange); }
+  .hero-sector-btn:active { background: rgba(244,84,30,.25); border-color: var(--orange-bright); }
+  .svc-card:active, .ind-card:active, .info-card:active { transform: scale(.99); }
+}

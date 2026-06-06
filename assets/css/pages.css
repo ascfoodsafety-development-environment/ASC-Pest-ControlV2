@@ -73,12 +73,15 @@
 .contact-method a, .contact-method span { color: var(--muted); font-size: .9rem; }
 
 /* Form styles */
+.pg-form-row { display: grid; gap: 0 1.5rem; }
+@media (min-width: 30rem) { .pg-form-row { grid-template-columns: 1fr 1fr; } }
 .pg-form .field { margin-bottom: 1.2rem; }
 .pg-form label { display: block; font-size: .88rem; font-weight: 600; color: var(--muted); margin-bottom: .4rem; }
 .pg-form input, .pg-form textarea, .pg-form select {
-  width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-  padding: .75rem 1rem; color: var(--fg); font-family: inherit; font-size: .95rem;
-  transition: border-color .2s;
+  width: 100%; min-width: 0; box-sizing: border-box;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: .85rem 1rem; color: var(--fg); font-family: inherit;
+  font-size: max(1rem, 16px); transition: border-color .2s; min-height: 48px;
 }
 .pg-form input:focus, .pg-form textarea:focus, .pg-form select:focus { outline: none; border-color: var(--orange); }
 .pg-form textarea { resize: vertical; min-height: 110px; }
@@ -103,3 +106,20 @@
 .faq-section:nth-child(even) { background: var(--bg-alt); }
 .faq-category { margin-bottom: 2rem; }
 .faq-category h3 { font-size: clamp(1.2rem,1rem + 1vw,1.6rem); margin-bottom: 1rem; color: var(--fg); }
+
+/* ── Mobile optimizations ── */
+@media (max-width: 480px) {
+  /* Form rows stack to single column */
+  .pg-form-row { grid-template-columns: 1fr; }
+  /* Buttons full-width */
+  .pg-form .btn { width: 100%; justify-content: center; }
+  /* Contact grid stacks */
+  .contact-grid { grid-template-columns: 1fr; }
+  /* Hero actions wrap and grow */
+  .page-hero-actions .btn { flex: 1 1 100%; justify-content: center; }
+}
+@media (max-width: 600px) {
+  .page-hero-actions { flex-direction: column; align-items: stretch; }
+  .page-hero-actions .btn { justify-content: center; }
+  .split { gap: 1.5rem; }
+}

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!sDOCTYPE html>
 <html lang="en-ZA" itemscope itemtype="https://schema.org/WebPage">
 <head>
   <meta charset="UTF-8" />
@@ -1479,5 +1479,42 @@
       </div>
     </div>
   </div>
+  <!-- Modal wiring: inline, no external deps, runs after DOM is parsed -->
+  <script>
+  (function () {
+    function openM(id) {
+      var m = document.getElementById(id);
+      if (!m) return;
+      m.hidden = false;
+      requestAnimationFrame(function () { m.classList.add('open'); });
+      document.body.style.overflow = 'hidden';
+    }
+    function closeM(m) {
+      m.classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(function () { m.hidden = true; }, 220);
+    }
+    // Wire all open buttons
+    document.querySelectorAll('[data-open-modal]').forEach(function (b) {
+      b.addEventListener('click', function () { openM(b.dataset.openModal); }, { passive: true });
+    });
+    // Wire all close buttons and backdrops inside each modal
+    document.querySelectorAll('.amodal').forEach(function (m) {
+      m.querySelectorAll('[data-close-modal]').forEach(function (b) {
+        b.addEventListener('click', function () { closeM(m); }, { passive: true });
+      });
+    });
+    // Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        var o = document.querySelector('.amodal.open');
+        if (o) closeM(o);
+      }
+    });
+    // Expose so map-form.js can enhance (map init, form submit, etc.)
+    window._ascOpenModal = openM;
+    window._ascCloseModal = closeM;
+  })();
+  </script>
 </body>
 </html>
