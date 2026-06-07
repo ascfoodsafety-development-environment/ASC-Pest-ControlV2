@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Vera — ASC Pest Control Expert | ASC Hub</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="../../../logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Tokens (mirror hub.css) ── */
+    :root {
+      --orange:      #FC4C01;
+      --orange-soft: #FFE9DE;
+      --navy:        #101920;
+      --navy2:       #19242F;
+      --navy3:       #22303c;
+      --bg:          #F5F6F8;
+      --card:        #FFFFFF;
+      --line:        #E7E9EE;
+      --text:        #16202B;
+      --muted:       #6B7480;
+      --green:       #1F9D6B;
+      --green-soft:  #E1F5EC;
+      --amber:       #C98415;
+      --red:         #DB4B36;
+      --blue:        #2D74C4;
+      --radius:      14px;
+      --sidebar-w:   240px;
+
+      /* Vera palette */
+      --vera:        #7C3AED;
+      --vera-mid:    #6D28D9;
+      --vera-soft:   #EDE9FE;
+      --vera-glow:   rgba(124,58,237,.18);
+      --vera-border: rgba(124,58,237,.22);
+      --vera-msg-bg: #F4F1FF;
+
+      --chat-bg:     #F8F8FB;
+      --user-msg:    var(--navy);
+      --user-msg-fg: #FFFFFF;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Hanken Grotesk', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      display: flex; flex-direction: column;
+    }
+    h1,h2,h3,h4 { font-family: 'Sora', sans-serif; }
+    button { font-family: inherit; cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Top bar ── */
+    .topbar {
+      flex: none;
+      background: var(--navy); color: #fff;
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 20px; height: 52px; z-index: 50;
+    }
+    .topbar-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Sora'; font-weight: 700; font-size: 15px;
+    }
+    .topbar-brand img { width: 28px; height: 28px; border-radius: 7px; }
+    .topbar-divider { width: 1px; height: 20px; background: #2d3d4d; flex: none; }
+    .topbar-vera-label {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Sora'; font-weight: 700; font-size: 15px;
+    }
+    .topbar-vera-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--vera); box-shadow: 0 0 8px var(--vera);
+    }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .topbar-back-btn {
+      background: none; border: 1px solid #33414e; color: #cdd5dd;
+      font-family: 'Sora'; font-weight: 600; font-size: 12px;
+      padding: 7px 13px; border-radius: 999px; transition: .15s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .topbar-back-btn:hover { border-color: #5a6c7a; color: #fff; }
+    .topbar-status-badge {
+      font-size: 11px; color: #9aa6b2; border: 1px solid #33414e;
+      padding: 3px 9px; border-radius: 999px; font-weight: 600;
+    }
+
+    /* ── App shell ── */
+    .app-shell {
+      flex: 1; min-height: 0;
+      display: grid; grid-template-columns: var(--sidebar-w) 1fr;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--navy); color: #cdd5dd;
+      padding: 18px 12px;
+      display: flex; flex-direction: column; gap: 3px;
+      overflow-y: auto;
+    }
+    .vera-identity {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      padding: 16px 8px 22px; border-bottom: 1px solid #283642; margin-bottom: 14px;
+    }
+    .vera-avatar {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--vera), #9D4EDD);
+      display: grid; place-items: center;
+      font-family: 'Sora'; font-weight: 800; font-size: 22px; color: #fff;
+      box-shadow: 0 0 24px var(--vera-glow);
+      position: relative;
+    }
+    .vera-avatar::after {
+      content: "";
+      position: absolute; bottom: -3px; right: -3px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--green); border: 2.5px solid var(--navy);
+    }
+    .vera-name { font-family: 'Sora'; font-weight: 700; color: #fff; font-size: 15px; }
+    .vera-title { font-size: 11.5px; color: #7c899a; text-align: center; line-height: 1.4; }
+
+    .nav-label {
+      font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+      color: #5f6c78; font-weight: 700; padding: 14px 12px 6px;
+    }
+    .nav-item {
+      font-size: 13px; font-weight: 500; color: #aeb8c2;
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 10px; cursor: pointer; transition: .15s;
+    }
+    .nav-item:hover { background: var(--navy2); color: #fff; }
+    .nav-item.on { background: var(--navy2); color: #fff; }
+    .nav-item svg { flex: none; opacity: .8; }
+    .nav-item.on svg { opacity: 1; }
+
+    .topic-chip {
+      font-size: 11.5px; color: #8a96a2; padding: 6px 10px;
+      border: 1px solid #283642; border-radius: 8px;
+      cursor: pointer; transition: .15s; display: block; line-height: 1.4;
+    }
+    .topic-chip:hover { border-color: var(--vera-border); color: var(--vera-soft); background: rgba(124,58,237,.08); }
+
+    .sidebar-foot {
+      margin-top: auto; font-size: 11px; color: #6b7783;
+      padding: 12px 10px 0; border-top: 1px solid #283642;
+      line-height: 1.6;
+    }
+
+    /* ── Chat area ── */
+    .chat-wrap {
+      display: flex; flex-direction: column;
+      background: var(--chat-bg); min-height: 0;
+    }
+
+    /* Session header */
+    .chat-header {
+      flex: none;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px;
+      background: var(--card); border-bottom: 1px solid var(--line);
+    }
+    .chat-header-left { display: flex; align-items: center; gap: 12px; }
+    .chat-header-avatar {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--vera), #9D4EDD);
+      display: grid; place-items: center;
+      font-family: 'Sora'; font-weight: 800; color: #fff; font-size: 14px;
+      box-shadow: 0 0 12px var(--vera-glow);
+    }
+    .chat-header-info h3 { font-size: 14px; font-weight: 700; }
+    .chat-header-info p  { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+    .chat-header-actions { display: flex; gap: 8px; }
+    .icon-btn {
+      width: 34px; height: 34px; border-radius: 9px;
+      border: 1px solid var(--line); background: none; color: var(--muted);
+      display: grid; place-items: center; transition: .15s;
+    }
+    .icon-btn:hover { border-color: #c9ced8; color: var(--text); }
+
+    /* Messages list */
+    .messages {
+      flex: 1; min-height: 0;
+      overflow-y: auto; padding: 28px 24px;
+      display: flex; flex-direction: column; gap: 20px;
+      scroll-behavior: smooth;
+    }
+
+    /* Welcome splash (shown when no messages) */
+    .vera-welcome {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 24px;
+      flex: 1; padding: 40px 20px;
+      text-align: center;
+    }
+    .vera-welcome-avatar {
+      width: 80px; height: 80px; border-radius: 22px;
+      background: linear-gradient(135deg, var(--vera), #9D4EDD);
+      display: grid; place-items: center;
+      font-family: 'Sora'; font-weight: 800; font-size: 34px; color: #fff;
+      box-shadow: 0 8px 40px var(--vera-glow);
+    }
+    .vera-welcome h2 { font-size: 22px; font-weight: 700; }
+    .vera-welcome p  { color: var(--muted); font-size: 14px; max-width: 440px; line-height: 1.6; }
+    .starter-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 10px; width: 100%; max-width: 560px;
+    }
+    .starter-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 14px 16px; cursor: pointer; text-align: left;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .starter-card:hover {
+      border-color: var(--vera-border);
+      box-shadow: 0 0 0 3px var(--vera-glow);
+    }
+    .starter-card .sc-label { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .starter-card .sc-sub   { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    /* Message bubbles */
+    .msg-row {
+      display: flex; gap: 10px; align-items: flex-end;
+      animation: msg-in .22s ease both;
+    }
+    .msg-row.user { flex-direction: row-reverse; }
+    @keyframes msg-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-av {
+      width: 30px; height: 30px; border-radius: 9px; flex: none;
+      display: grid; place-items: center;
+      font-family: 'Sora'; font-weight: 700; font-size: 11px; color: #fff;
+    }
+    .msg-av.vera { background: linear-gradient(135deg, var(--vera), #9D4EDD); }
+    .msg-av.user { background: var(--navy); }
+
+    .msg-content { max-width: 72%; display: flex; flex-direction: column; gap: 4px; }
+    .msg-row.user .msg-content { align-items: flex-end; }
+
+    .bubble {
+      padding: 12px 15px; border-radius: 16px; font-size: 14px; line-height: 1.65;
+      position: relative; word-break: break-word;
+    }
+    .bubble.vera {
+      background: var(--card); border: 1px solid var(--line);
+      border-bottom-left-radius: 4px;
+      color: var(--text);
+    }
+    .bubble.user {
+      background: var(--user-msg); color: var(--user-msg-fg);
+      border-bottom-right-radius: 4px;
+    }
+    .bubble p { margin-bottom: .6em; }
+    .bubble p:last-child { margin-bottom: 0; }
+    .bubble ul, .bubble ol { padding-left: 1.3em; margin: .5em 0 .6em; }
+    .bubble li { margin-bottom: .35em; line-height: 1.55; }
+    .bubble strong { font-weight: 600; }
+    .bubble code {
+      background: rgba(0,0,0,.06); border-radius: 4px;
+      padding: .1em .4em; font-size: .88em; font-family: 'Courier New', monospace;
+    }
+    .bubble .vera-section-title {
+      font-family: 'Sora'; font-weight: 700; font-size: 13px;
+      color: var(--vera); margin-bottom: .4em; margin-top: .8em;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .bubble .vera-section-title:first-child { margin-top: 0; }
+    .bubble .vera-tag {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      background: var(--vera-soft); color: var(--vera);
+      padding: 2px 8px; border-radius: 4px; margin: .2em .2em 0 0;
+    }
+
+    .msg-time { font-size: 11px; color: var(--muted); padding: 0 4px; }
+    .msg-row.user .msg-time { text-align: right; }
+
+    /* Typing indicator */
+    .typing-row { display: flex; gap: 10px; align-items: flex-end; }
+    .typing-bubble {
+      background: var(--card); border: 1px solid var(--line); border-bottom-left-radius: 4px;
+      padding: 14px 16px; border-radius: 16px;
+      display: flex; gap: 5px; align-items: center;
+    }
+    .typing-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--muted);
+      animation: bounce .9s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: .15s; }
+    .typing-dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce {
+      0%,80%,100% { transform: translateY(0); opacity: .4; }
+      40%          { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* Suggested follow-ups */
+    .suggestions {
+      display: flex; gap: 7px; flex-wrap: wrap; padding: 0 4px;
+    }
+    .sug-chip {
+      font-size: 12.5px; font-weight: 500;
+      border: 1px solid var(--vera-border); color: var(--vera);
+      background: var(--vera-soft); border-radius: 999px;
+      padding: 5px 12px; cursor: pointer; transition: .15s;
+      white-space: nowrap;
+    }
+    .sug-chip:hover { background: var(--vera); color: #fff; }
+
+    /* Citation pill */
+    .citation {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+      background: rgba(124,58,237,.08); color: var(--vera);
+      border: 1px solid var(--vera-border); vertical-align: middle; margin-left: 3px;
+    }
+
+    /* ── Input bar ── */
+    .input-bar {
+      flex: none;
+      background: var(--card); border-top: 1px solid var(--line);
+      padding: 16px 24px;
+    }
+    .input-inner {
+      display: flex; align-items: flex-end; gap: 10px;
+      background: var(--bg); border: 1.5px solid var(--line);
+      border-radius: 16px; padding: 10px 12px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .input-inner:focus-within {
+      border-color: var(--vera); box-shadow: 0 0 0 3px var(--vera-glow);
+    }
+    #vera-input {
+      flex: 1; background: none; border: none; outline: none; resize: none;
+      font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: var(--text);
+      line-height: 1.5; min-height: 22px; max-height: 140px; overflow-y: auto;
+    }
+    #vera-input::placeholder { color: var(--muted); }
+    .input-actions { display: flex; gap: 6px; align-items: flex-end; }
+    .send-btn {
+      width: 38px; height: 38px; border-radius: 11px; border: none;
+      background: var(--vera); color: #fff;
+      display: grid; place-items: center; transition: .15s; flex: none;
+    }
+    .send-btn:hover:not(:disabled) { background: var(--vera-mid); transform: translateY(-1px); }
+    .send-btn:disabled { opacity: .4; }
+    .input-hint {
+      text-align: center; font-size: 11.5px; color: var(--muted);
+      margin-top: 8px; line-height: 1.5;
+    }
+
+    /* ── Vera knowledge badge strip ── */
+    .expertise-strip {
+      display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 24px;
+      background: var(--card); border-bottom: 1px solid var(--line);
+    }
+    .exp-badge {
+      font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+      background: var(--vera-soft); color: var(--vera); white-space: nowrap;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .starter-grid { grid-template-columns: 1fr; }
+      .topbar-brand span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Top bar ── -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <img src="../../../logo.png" alt="ASC" />
+    <span>ASC Hub</span>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-vera-label">
+    <div class="topbar-vera-dot"></div>
+    Vera
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-status-badge">ONLINE</span>
+    <a href="index.html" class="topbar-back-btn">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+      Back to Hub
+    </a>
+  </div>
+</header>
+
+<!-- ── App shell ── -->
+<div class="app-shell">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="vera-identity">
+      <div class="vera-avatar">V</div>
+      <div class="vera-name">Vera</div>
+      <div class="vera-title">Pest Control Expert<br/>PhD — Entomology, Pathology &amp; IPM</div>
+    </div>
+
+    <div class="nav-label">New session</div>
+    <div class="nav-item on" id="btn-new-chat" onclick="veraNewChat()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      New conversation
+    </div>
+
+    <div class="nav-label" style="margin-top:6px;">Browse by topic</div>
+
+    <span class="topic-chip" onclick="veraAsk('Explain integrated pest management and the four pillars of IPM')">
+      Integrated Pest Management
+    </span>
+    <span class="topic-chip" onclick="veraAsk('What does HACCP require from a pest control programme?')">
+      HACCP &amp; food safety compliance
+    </span>
+    <span class="topic-chip" onclick="veraAsk('How do I identify a German cockroach infestation?')">
+      Cockroach identification
+    </span>
+    <span class="topic-chip" onclick="veraAsk('What are the entry points for rodents in a warehouse and how do I seal them?')">
+      Rodent exclusion
+    </span>
+    <span class="topic-chip" onclick="veraAsk('What is the difference between subterranean and drywood termites in South Africa?')">
+      Termite species — South Africa
+    </span>
+    <span class="topic-chip" onclick="veraAsk('Explain hospital-grade disinfection and the importance of dwell time')">
+      Hospital-grade disinfection
+    </span>
+    <span class="topic-chip" onclick="veraAsk('What pesticides are registered under Act 36 of 1947 in South Africa?')">
+      SA pesticide regulation
+    </span>
+    <span class="topic-chip" onclick="veraAsk('What is the SANS 10049 standard for pest control?')">
+      SANS 10049
+    </span>
+
+    <div class="sidebar-foot">
+      Vera is ASC Pest Control's internal AI expert. Responses are for professional guidance — always confirm treatment plans with your lead technician.
+    </div>
+  </aside>
+
+  <!-- ── Chat area ── -->
+  <div class="chat-wrap">
+
+    <!-- Chat header -->
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-header-avatar">V</div>
+        <div class="chat-header-info">
+          <h3>Dr. Vera — Pest Control Expert</h3>
+          <p>PhD Entomology · IPM · Pathology · SA Compliance · HACCP</p>
+        </div>
+      </div>
+      <div class="chat-header-actions">
+        <button class="icon-btn" title="Clear conversation" onclick="veraNewChat()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Expertise badge strip -->
+    <div class="expertise-strip">
+      <span class="exp-badge">Entomology</span>
+      <span class="exp-badge">IPM</span>
+      <span class="exp-badge">Pathology</span>
+      <span class="exp-badge">HACCP</span>
+      <span class="exp-badge">SANS 10049</span>
+      <span class="exp-badge">Act 36 of 1947</span>
+      <span class="exp-badge">Rodentology</span>
+      <span class="exp-badge">Mycology</span>
+      <span class="exp-badge">Disinfection</span>
+      <span class="exp-badge">SA Pest Fauna</span>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages" id="vera-messages">
+      <!-- Welcome splash injected by JS -->
+    </div>
+
+    <!-- Input -->
+    <div class="input-bar">
+      <div class="input-inner">
+        <textarea
+          id="vera-input"
+          placeholder="Ask Vera anything about pest control, IPM, compliance, pathology…"
+          rows="1"
+          aria-label="Message Vera"
+        ></textarea>
+        <div class="input-actions">
+          <button class="send-btn" id="vera-send" title="Send" onclick="veraSend()" disabled>
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+      <p class="input-hint">Vera draws on peer-reviewed entomology, SA regulatory frameworks and ASC field data. Always verify treatment decisions on site.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================================
+   Vera — ASC Pest Control Expert AI
+   Chat interface · Claude API bridge · Domain-grounded prompt system
+   ========================================================================= */
+(function () {
+  "use strict";
+
+  /* ── Config ── */
+  const API_BASE = (
+    location.protocol === "file:" ||
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1" ||
+    location.port === "5500" ||
+    location.port === "8080"
+  ) ? "http://127.0.0.1:8000" : location.origin;
+
+  /* ── DOM refs ── */
+  const msgList  = document.getElementById("vera-messages");
+  const input    = document.getElementById("vera-input");
+  const sendBtn  = document.getElementById("vera-send");
+
+  /* ── Conversation history ── */
+  let history = [];
+  let isTyping = false;
+
+  /* ── Vera's system persona ── */
+  const VERA_SYSTEM = `You are Vera, the resident pest control expert at ASC Pest Control (Gqeberha, Eastern Cape, South Africa).
+
+CREDENTIALS
+- PhD in Entomology (University of Pretoria)
+- PhD in Medical and Veterinary Pathology
+- PhD in Environmental and Molecular Biology
+- Specialist in Integrated Pest Management (IPM)
+- Registered practitioner under the Pest Control Operators Act (Act 36 of 1947)
+- Expert in SANS 10049, HACCP, BRCGS, SQF, and FSSC 22000 food safety frameworks
+- 20 years of field experience across Eastern Cape, Western Cape and Gauteng
+
+PERSONALITY
+Vera is precise, warm, authoritative, and practical. She communicates like a PhD scientist who has also spent years on the ground in warehouses, hospitals and restaurants. She never uses jargon without explaining it. She gives concrete, actionable answers. When something is outside her expertise she says so clearly.
+
+DOMAIN EXPERTISE
+- Entomology: identification, biology, life cycles, and behaviour of all pest species found in South Africa including German cockroach (Blattella germanica), American cockroach (Periplaneta americana), subterranean termites (Coptotermes formosanus, Macrotermes spp.), drywood termites (Cryptotermes spp.), brown rat (Rattus norvegicus), roof rat (Rattus rattus), house mouse (Mus musculus), stored product pests, flies (Musca domestica, Lucilia spp.), and urban wildlife
+- Integrated Pest Management: the four-pillar IPM model (monitoring, exclusion, sanitation, chemical intervention as last resort), device placement, population threshold models, pest pressure mapping
+- Pathology: zoonotic diseases carried by pest species (leptospirosis, salmonellosis, hantavirus, plague, murine typhus, toxoplasmosis), microbial contamination, allergen science
+- Disinfection science: log-reduction claims, quaternary ammonium compounds, hydrogen peroxide, chlorine dioxide, electrostatic application, contact time, PPE requirements
+- South African regulatory framework: Act 36 of 1947, SANS 10049 (prerequisite programmes for food safety), DoA pesticide registration, SAPCA membership requirements
+- Food safety compliance: HACCP 7 principles, GFSI schemes (BRCGS, SQF, FSSC 22000), audit documentation requirements, pest control as a prerequisite programme
+- Chemical knowledge: registered actives in South Africa, modes of action, resistance management, label compliance, dilution rates, safety data sheets
+- Structural pest management: building surveys, exclusion methods, proofing materials, entry point analysis
+
+RESPONSE GUIDELINES
+- Always structure answers clearly — use headings for multi-part answers
+- Lead with the direct answer, then explain the science behind it
+- Include practical recommendations ASC Pest Control technicians can act on
+- Reference South African standards and species by their correct names
+- For compliance questions cite the relevant standard (e.g., SANS 10049:2019, BRCGS Issue 9)
+- Keep answers concise but complete — never truncate a critical safety point
+- End with 2-3 follow-up questions the user might want to ask next
+
+ASC PEST CONTROL CONTEXT
+- Operates in Gqeberha (Port Elizabeth), Nelson Mandela Bay, Eastern Cape and Gauteng
+- Offers: general pest control, IPM programmes, termite treatments, disinfection services, rodent exclusion, fumigation
+- Contact: 041 004 0037 | WhatsApp: 061 138 3989
+- SAPCA member`;
+
+  /* ── Render welcome splash ── */
+  function renderWelcome() {
+    msgList.innerHTML = `
+      <div class="vera-welcome" id="vera-welcome">
+        <div class="vera-welcome-avatar">V</div>
+        <h2>Ask Vera anything</h2>
+        <p>I'm ASC's resident pest control expert — entomology, IPM, pathology, HACCP compliance, South African pest species, disinfection science. Ask me anything.</p>
+        <div class="starter-grid">
+          <div class="starter-card" onclick="veraAsk('What are the seven HACCP principles and how do they apply to pest control?')">
+            <div class="sc-label">HACCP &amp; compliance</div>
+            <div class="sc-sub">What does your audit actually require?</div>
+          </div>
+          <div class="starter-card" onclick="veraAsk('What diseases can rats and mice transmit to humans in South Africa?')">
+            <div class="sc-label">Rodent pathology</div>
+            <div class="sc-sub">Zoonotic risks, transmission routes</div>
+          </div>
+          <div class="starter-card" onclick="veraAsk('How do I know if I have a German cockroach infestation and how serious is it?')">
+            <div class="sc-label">Cockroach identification</div>
+            <div class="sc-sub">Species, signs, severity assessment</div>
+          </div>
+          <div class="starter-card" onclick="veraAsk('What is the correct way to read and interpret a pest control visit report?')">
+            <div class="sc-label">Visit reports</div>
+            <div class="sc-sub">What should your contractor be giving you?</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  /* ── Remove welcome splash on first message ── */
+  function clearWelcome() {
+    const w = document.getElementById("vera-welcome");
+    if (w) w.remove();
+  }
+
+  /* ── Add a message bubble ── */
+  function addMessage(role, html, suggestions) {
+    clearWelcome();
+    const isUser = role === "user";
+    const time = new Date().toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit" });
+
+    const row = document.createElement("div");
+    row.className = `msg-row ${isUser ? "user" : "vera"}`;
+
+    const av = document.createElement("div");
+    av.className = `msg-av ${isUser ? "user" : "vera"}`;
+    av.textContent = isUser ? "U" : "V";
+
+    const content = document.createElement("div");
+    content.className = "msg-content";
+
+    const bubble = document.createElement("div");
+    bubble.className = `bubble ${isUser ? "user" : "vera"}`;
+    bubble.innerHTML = html;
+
+    const timeEl = document.createElement("div");
+    timeEl.className = "msg-time";
+    timeEl.textContent = time;
+
+    content.appendChild(bubble);
+    content.appendChild(timeEl);
+
+    if (suggestions && suggestions.length && !isUser) {
+      const sugRow = document.createElement("div");
+      sugRow.className = "suggestions";
+      suggestions.forEach(s => {
+        const chip = document.createElement("button");
+        chip.className = "sug-chip";
+        chip.textContent = s;
+        chip.onclick = () => veraAsk(s);
+        sugRow.appendChild(chip);
+      });
+      content.appendChild(sugRow);
+    }
+
+    row.appendChild(av);
+    row.appendChild(content);
+    msgList.appendChild(row);
+    msgList.scrollTop = msgList.scrollHeight;
+  }
+
+  /* ── Typing indicator ── */
+  let typingEl = null;
+  function showTyping() {
+    if (typingEl) return;
+    typingEl = document.createElement("div");
+    typingEl.className = "typing-row";
+    typingEl.innerHTML = `
+      <div class="msg-av vera">V</div>
+      <div class="typing-bubble">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>`;
+    msgList.appendChild(typingEl);
+    msgList.scrollTop = msgList.scrollHeight;
+  }
+  function hideTyping() {
+    if (typingEl) { typingEl.remove(); typingEl = null; }
+  }
+
+  /* ── Convert plain text / markdown-lite to HTML ── */
+  function formatResponse(text) {
+    // Headings
+    text = text.replace(/^### (.+)$/gm, '<div class="vera-section-title">$1</div>');
+    text = text.replace(/^## (.+)$/gm, '<div class="vera-section-title" style="font-size:14px">$1</div>');
+    text = text.replace(/^# (.+)$/gm, '<div class="vera-section-title" style="font-size:15px">$1</div>');
+    // Bold
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Italic
+    text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    // Inline code
+    text = text.replace(/`(.+?)`/g, '<code>$1</code>');
+    // Bullet lists
+    text = text.replace(/^[\-\*] (.+)$/gm, '<li>$1</li>');
+    text = text.replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`);
+    // Numbered lists
+    text = text.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+    // Paragraphs
+    const lines = text.split('\n');
+    let out = '';
+    for (const line of lines) {
+      const t = line.trim();
+      if (!t) { out += ''; continue; }
+      if (t.startsWith('<')) { out += t + '\n'; continue; }
+      out += `<p>${t}</p>\n`;
+    }
+    return out;
+  }
+
+  /* ── Extract follow-up suggestions from response ── */
+  function extractSuggestions(text) {
+    const patterns = [
+      /follow[\-\s]up questions?[:\s]+(.+?)(?:\n|$)/gi,
+      /you might also ask[:\s]+(.+?)(?:\n|$)/gi,
+      /related questions?[:\s]+(.+?)(?:\n|$)/gi,
+    ];
+    const suggestions = [];
+    for (const pat of patterns) {
+      const m = pat.exec(text);
+      if (m) {
+        const raw = m[1].split(/[·•\|]/).map(s => s.trim()).filter(Boolean);
+        suggestions.push(...raw.slice(0, 3));
+      }
+    }
+    return suggestions.slice(0, 3);
+  }
+
+  /* ── Call backend Vera endpoint ── */
+  async function callVera(userMessage) {
+    const messages = [
+      ...history,
+      { role: "user", content: userMessage }
+    ];
+
+    const res = await fetch(`${API_BASE}/vera/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages,
+        system: VERA_SYSTEM,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Server error ${res.status}`);
+    }
+    return res.json();
+  }
+
+  /* ── Main send handler ── */
+  async function send(text) {
+    if (!text.trim() || isTyping) return;
+    isTyping = true;
+    sendBtn.disabled = true;
+
+    addMessage("user", escapeHtml(text));
+    history.push({ role: "user", content: text });
+
+    showTyping();
+
+    try {
+      const data = await callVera(text);
+      hideTyping();
+
+      const reply = data.reply || data.content || data.message || "(No response)";
+      const suggestions = extractSuggestions(reply);
+      const html = formatResponse(reply);
+
+      addMessage("vera", html, suggestions);
+      history.push({ role: "assistant", content: reply });
+
+    } catch (err) {
+      hideTyping();
+      addMessage("vera",
+        `<p>I'm having trouble connecting to the server right now. Please check that the ASC backend is running and try again.</p>
+         <p style="font-size:12px;color:var(--muted);margin-top:6px;">${escapeHtml(err.message)}</p>`,
+        ["Try again", "How do I start the backend?"]
+      );
+    }
+
+    isTyping = false;
+    sendBtn.disabled = !input.value.trim();
+    input.focus();
+  }
+
+  /* ── Escape HTML ── */
+  function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  /* ── Public API (for onclick handlers in HTML) ── */
+  window.veraSend = function () {
+    const text = input.value.trim();
+    input.value = "";
+    input.style.height = "auto";
+    sendBtn.disabled = true;
+    if (text) send(text);
+  };
+
+  window.veraAsk = function (text) {
+    input.value = text;
+    sendBtn.disabled = false;
+    window.veraSend();
+  };
+
+  window.veraNewChat = function () {
+    history = [];
+    renderWelcome();
+    input.value = "";
+    sendBtn.disabled = true;
+  };
+
+  /* ── Input bindings ── */
+  input.addEventListener("input", function () {
+    sendBtn.disabled = !this.value.trim();
+    this.style.height = "auto";
+    this.style.height = Math.min(this.scrollHeight, 140) + "px";
+  });
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (!sendBtn.disabled) window.veraSend();
+    }
+  });
+
+  /* ── Init ── */
+  renderWelcome();
+  input.focus();
+
+})();
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!sDOCTYPE html>
+<!DOCTYPE html>
 <html lang="en-ZA" itemscope itemtype="https://schema.org/WebPage">
 <head>
   <meta charset="UTF-8" />
@@ -398,6 +398,8 @@
 
         <a href="faq.html" class="nav-tab">FAQ</a>
 
+        <a href="blog.html" class="nav-tab">Blog</a>
+
         <div class="nav-item has-dropdown">
           <button class="nav-tab" aria-expanded="false" aria-haspopup="true">Contact <svg class="nav-caret" viewBox="0 0 12 8" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l5 5 5-5"/></svg></button>
           <div class="nav-dropdown" role="menu">
@@ -466,6 +468,7 @@
       </div>
 
       <a href="faq.html">FAQ</a>
+    <a href="blog.html">Blog</a>
 
       <div class="mnav-item">
         <button class="mnav-tab" aria-expanded="false">Contact <svg class="nav-caret" viewBox="0 0 12 8" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l5 5 5-5"/></svg></button>
@@ -533,6 +536,14 @@
           <div class="stat"><strong>15+</strong><span>Eastern Cape &amp; Gauteng service areas</span></div>
           <div class="stat"><strong>24/7</strong><span>Urgent response support</span></div>
           <div class="stat"><strong>100%</strong><span>Audit-ready record keeping</span></div>
+        </div>
+        <div class="trust-accreditations">
+          <span class="trust-accred-label">Industry Memberships &amp; Accreditations</span>
+          <div class="trust-accred-logos">
+            <a href="https://sapca.org.za" rel="noopener noreferrer" target="_blank" class="trust-accred-badge" aria-label="SAPCA member">
+              <img src="assets/images/sapca.png" alt="SAPCA — South African Pest Control Association" width="140" height="52" />
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -956,6 +967,12 @@
           <span class="logo-text">ASC <strong>Pest Control</strong></span>
         </a>
         <p class="footer-note">Compliance-driven pest control and hospital-grade disinfection across Gqeberha, the Eastern Cape and Gauteng.</p>
+        <div class="footer-accreditations">
+          <span class="footer-accred-label">Member</span>
+          <a href="https://sapca.org.za" rel="noopener noreferrer" target="_blank" class="footer-accred-badge" aria-label="SAPCA — South African Pest Control Association member">
+            <img src="assets/images/sapca.png" alt="SAPCA — South African Pest Control Association" width="120" height="44" />
+          </a>
+        </div>
       </div>
       <div>
         <h4>Company</h4>
@@ -1101,18 +1118,100 @@
           toggle.setAttribute('aria-expanded', 'false');
         });
       });
-
-      /* close mobile nav on tap outside */
-      document.addEventListener('click', function (e) {
-        if (!mobileNav.classList.contains('open')) return;
-        if (toggle.contains(e.target) || mobileNav.contains(e.target)) return;
-        mobileNav.classList.remove('open');
-        toggle.classList.remove('is-open');
-        toggle.setAttribute('aria-expanded', 'false');
-      });
     }
   })();
   </script>
+
+  <!-- ============ Chat stack: Vera (top) + Sentinel (bottom) ============ -->
+  <div class="chat-stack">
+
+  <!-- ── Vera — Pest Control Expert AI ── -->
+  <div id="vera-widget" class="vera-widget">
+
+    <button id="vera-launcher" class="vera-launcher"
+            aria-expanded="false" aria-controls="vera-panel"
+            aria-label="Ask Vera, ASC's pest control expert">
+      <span class="vera-orb" aria-hidden="true">
+        <svg viewBox="0 0 36 36" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Graduation cap / expertise icon -->
+          <circle cx="18" cy="14" r="6" fill="rgba(167,139,250,.25)" stroke="#a78bfa" stroke-width="1.8"/>
+          <path d="M18 8 L30 14 L18 20 L6 14 Z" fill="rgba(124,58,237,.35)" stroke="#a78bfa" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M12 17.5 L12 24 Q18 27 24 24 L24 17.5" fill="none" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="30" y1="14" x2="30" y2="22" stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="30" cy="23" r="1.5" fill="#a78bfa"/>
+        </svg>
+      </span>
+      <span class="vera-launcher-label">Vera</span>
+      <span class="vera-ping" aria-hidden="true"></span>
+    </button>
+
+    <div id="vera-panel" class="vera-panel"
+         role="dialog" aria-modal="true" aria-labelledby="vera-title"
+         aria-hidden="true">
+
+      <header class="vera-head">
+        <span class="vera-orb sm" aria-hidden="true">
+          <svg viewBox="0 0 36 36" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="14" r="6" fill="rgba(167,139,250,.2)" stroke="#a78bfa" stroke-width="1.8"/>
+            <path d="M18 8 L30 14 L18 20 L6 14 Z" fill="rgba(124,58,237,.3)" stroke="#a78bfa" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M12 17.5 L12 24 Q18 27 24 24 L24 17.5" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <div class="vera-id">
+          <strong id="vera-title">Dr. Vera</strong>
+          <span class="vera-sub">
+            <span class="vera-status-dot" aria-hidden="true"></span>
+            Pest Control Expert · PhD
+          </span>
+        </div>
+        <div class="vera-head-actions">
+          <button id="vera-minimize" class="vera-icon-btn" aria-label="Minimise" title="Minimise">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/></svg>
+          </button>
+          <button id="vera-close-btn" class="vera-icon-btn" aria-label="Close Vera">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="vera-badges">
+        <span class="vera-badge">Entomology</span>
+        <span class="vera-badge">IPM</span>
+        <span class="vera-badge">Pathology</span>
+        <span class="vera-badge">HACCP</span>
+        <span class="vera-badge">SANS 10049</span>
+        <span class="vera-badge">Disinfection</span>
+      </div>
+
+      <div id="vera-messages" class="vera-messages" role="log" aria-live="polite"></div>
+
+      <div class="vera-foot">
+        <form id="vera-form" class="vera-form" autocomplete="off">
+          <input id="vera-input" class="vera-input" type="text" name="message"
+                 placeholder="Ask Vera about pests, IPM, compliance…"
+                 maxlength="1000" aria-label="Ask Vera" autocomplete="off" required />
+          <button class="vera-send" type="submit" id="vera-send-btn" aria-label="Send" disabled>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+          </button>
+        </form>
+        <p class="vera-disclaimer">Vera · PhD Entomology, Pathology &amp; IPM · ASC Pest Control</p>
+      </div>
+    </div>
+    <!-- LLM training notice — floats above the panel, shown on each send -->
+    <div id="vera-training-notice" class="vera-training-notice" aria-live="polite" aria-atomic="true">
+      <span class="vera-training-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 6v6l4 2"/></svg>
+      </span>
+      <div class="vera-training-text">
+        <strong>LLM Being Trained</strong>
+        <p>Dr. Vera's model is actively learning. Responses may take a moment.</p>
+      </div>
+      <button class="vera-training-close" aria-label="Dismiss notice">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- /Vera -->
 
   <!-- ============ Sentinel — AI assistant ============ -->
   <div id="sentinel" class="sentinel" data-open="false">
@@ -1222,9 +1321,238 @@
 
     </div>
   </div>
+  <!-- /Sentinel -->
+  </div>
+  <!-- /chat-stack -->
 
   <script>
-    window.ASC_API_BASE = (location.protocol === 'file:' || location.port === '8080')
+  /* ================================================================
+     Vera — Pest Control Expert AI widget
+     Calls POST /vera/chat on the ASC backend (FastAPI).
+     Falls back gracefully if backend is offline.
+  ================================================================ */
+  (function () {
+    "use strict";
+
+    var API_BASE = (
+      location.protocol === 'file:' ||
+      location.hostname === 'localhost' ||
+      location.hostname === '127.0.0.1' ||
+      location.port === '5500' || location.port === '8080'
+    ) ? 'http://127.0.0.1:8000' : location.origin;
+
+    var VERA_SYSTEM = "You are Vera, the resident pest control expert at ASC Pest Control (Gqeberha, Eastern Cape, South Africa). You hold PhDs in Entomology, Medical and Veterinary Pathology, Environmental Biology, and Mycology. You are an expert in Integrated Pest Management (IPM), HACCP, SANS 10049, BRCGS, FSSC 22000, and the South African Pest Control Operators Act (Act 36 of 1947). You are precise, warm, and practical — you give direct, factual, actionable answers. Always reference the correct South African species names and regulatory standards. Keep answers clear and complete. After answering, offer 1-2 short follow-up question suggestions prefixed with 'You might also ask:'";
+
+    var launcher  = document.getElementById('vera-launcher');
+    var panel     = document.getElementById('vera-panel');
+    var messages  = document.getElementById('vera-messages');
+    var form      = document.getElementById('vera-form');
+    var input     = document.getElementById('vera-input');
+    var sendBtn   = document.getElementById('vera-send-btn');
+    var closeBtn  = document.getElementById('vera-close-btn');
+    var minBtn    = document.getElementById('vera-minimize');
+
+    var history = [];
+    var isOpen  = false;
+    var isMin   = false;
+    var isBusy  = false;
+    var welcomed = false;
+
+    /* ── Helpers ── */
+    function now() {
+      return new Date().toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' });
+    }
+    function esc(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+    function mdToHtml(t) {
+      t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      t = t.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      t = t.replace(/^### (.+)$/gm, '<strong style="color:#a78bfa;display:block;margin:.5em 0 .2em">$1</strong>');
+      t = t.replace(/^## (.+)$/gm, '<strong style="color:#c4b5fd;display:block;margin:.5em 0 .2em">$1</strong>');
+      t = t.replace(/^[-*] (.+)$/gm, '<li>$1</li>');
+      t = t.replace(/(<li>.*<\/li>\n?)+/g, function(m){ return '<ul>'+m+'</ul>'; });
+      var lines = t.split('\n'), out = '';
+      lines.forEach(function(l) {
+        var tr = l.trim();
+        if (!tr) return;
+        if (tr.charAt(0) === '<') { out += tr + '\n'; return; }
+        out += '<p>' + tr + '</p>\n';
+      });
+      return out;
+    }
+
+    /* ── Open / close ── */
+    function open() {
+      isOpen = true; isMin = false;
+      panel.classList.add('open'); panel.classList.remove('minimised');
+      panel.setAttribute('aria-hidden', 'false');
+      launcher.setAttribute('aria-expanded', 'true');
+      if (!welcomed) { showWelcome(); welcomed = true; }
+      setTimeout(function(){ input.focus(); }, 220);
+    }
+    function close() {
+      isOpen = false;
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
+      launcher.setAttribute('aria-expanded', 'false');
+    }
+    function minimise() {
+      isMin = !isMin;
+      panel.classList.toggle('minimised', isMin);
+    }
+
+    launcher.addEventListener('click', function(){ isOpen ? close() : open(); });
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (minBtn) minBtn.addEventListener('click', minimise);
+
+    /* ── Welcome state ── */
+    function showWelcome() {
+      var starters = [
+        'How do I know if I have German cockroaches?',
+        'What does HACCP require from pest control?',
+        'What diseases can rats transmit in South Africa?',
+        'Explain the four pillars of IPM'
+      ];
+      var chips = starters.map(function(s){
+        return '<button class="vera-starter" onclick="veraAsk(\''+s.replace(/'/g,"\\'")+'\')">' + esc(s) + '</button>';
+      }).join('');
+      messages.innerHTML =
+        '<div class="vera-welcome-msg">' +
+          '<div class="vera-welcome-av">V</div>' +
+          '<h4>Dr. Vera</h4>' +
+          '<p>I\'m ASC\'s pest control expert — entomology, IPM, pathology, HACCP &amp; SA compliance. Ask me anything.</p>' +
+          '<div class="vera-starters">' + chips + '</div>' +
+        '</div>';
+    }
+
+    /* ── Add a bubble ── */
+    function addMsg(role, html, suggestions) {
+      var welcome = messages.querySelector('.vera-welcome-msg');
+      if (welcome) welcome.remove();
+
+      var row = document.createElement('div');
+      row.className = 'vera-msg-row' + (role === 'user' ? ' user-row' : '');
+
+      var av = document.createElement('div');
+      av.className = 'vera-av vera-av-' + (role === 'user' ? 'user' : 'vera');
+      av.textContent = role === 'user' ? 'U' : 'V';
+
+      var wrap = document.createElement('div');
+
+      var bubble = document.createElement('div');
+      bubble.className = 'vera-bubble ' + (role === 'user' ? 'user-bub' : 'vera-bub');
+      bubble.innerHTML = html;
+      wrap.appendChild(bubble);
+
+      if (suggestions && suggestions.length) {
+        var sugRow = document.createElement('div');
+        sugRow.className = 'vera-suggestions';
+        suggestions.forEach(function(s){
+          var chip = document.createElement('button');
+          chip.className = 'vera-sug-chip';
+          chip.textContent = s;
+          chip.onclick = function(){ window.veraAsk(s); };
+          sugRow.appendChild(chip);
+        });
+        wrap.appendChild(sugRow);
+      }
+
+      row.appendChild(av);
+      row.appendChild(wrap);
+      messages.appendChild(row);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    /* ── Typing indicator ── */
+    var typingEl = null;
+    function showTyping() {
+      typingEl = document.createElement('div');
+      typingEl.className = 'vera-msg-row';
+      typingEl.innerHTML =
+        '<div class="vera-av vera-av-vera">V</div>' +
+        '<div class="vera-bubble vera-bub"><div class="vera-typing"><span></span><span></span><span></span></div></div>';
+      messages.appendChild(typingEl);
+      messages.scrollTop = messages.scrollHeight;
+    }
+    function hideTyping() { if (typingEl) { typingEl.remove(); typingEl = null; } }
+
+    /* ── API call ── */
+    async function callVera(text) {
+      history.push({ role: 'user', content: text });
+      var res = await fetch(API_BASE + '/vera/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history, system: VERA_SYSTEM })
+      });
+      if (!res.ok) throw new Error('Server ' + res.status);
+      var data = await res.json();
+      var reply = data.reply || '(No response)';
+      history.push({ role: 'assistant', content: reply });
+      return reply;
+    }
+
+    /* ── Send ── */
+    function showTrainingNotice() {
+      var n = document.getElementById('vera-training-notice');
+      n.classList.add('show');
+      clearTimeout(n._timer);
+      n._timer = setTimeout(function(){ n.classList.remove('show'); }, 3000);
+    }
+    document.getElementById('vera-training-notice')
+      .querySelector('.vera-training-close')
+      .addEventListener('click', function(){
+        var n = document.getElementById('vera-training-notice');
+        clearTimeout(n._timer);
+        n.classList.remove('show');
+      });
+
+    async function send(text) {
+      if (!text.trim() || isBusy) return;
+      isBusy = true; sendBtn.disabled = true;
+      addMsg('user', '<p>' + esc(text) + '</p>');
+      if (!isOpen) open();
+      showTrainingNotice();
+      showTyping();
+      try {
+        var reply = await callVera(text);
+        hideTyping();
+        // extract "You might also ask:" suggestions
+        var sug = [];
+        var m = reply.match(/you might also ask[:\s]+(.+)/i);
+        if (m) {
+          sug = m[1].split(/[·|\/,]/).map(function(s){ return s.trim().replace(/["']/g,''); }).filter(Boolean).slice(0,3);
+          reply = reply.replace(/you might also ask[:\s]+.+/i, '').trim();
+        }
+        addMsg('vera', mdToHtml(reply), sug);
+      } catch(e) {
+        hideTyping();
+        addMsg('vera', '<p>I\'m having trouble connecting right now. Please check the backend is running or contact ASC directly on <strong>041 004 0037</strong>.</p>');
+      }
+      isBusy = false;
+      sendBtn.disabled = !input.value.trim();
+      input.focus();
+    }
+
+    /* ── Form submit ── */
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var t = input.value.trim();
+      input.value = ''; sendBtn.disabled = true;
+      if (t) send(t);
+    });
+    input.addEventListener('input', function() {
+      sendBtn.disabled = !this.value.trim() || isBusy;
+    });
+
+    /* ── Public ── */
+    window.veraAsk = function(text) { input.value = ''; if (!isOpen) open(); send(text); };
+
+  })();
+  </script>
+
+  <script>
+    window.ASC_API_BASE = (location.protocol === 'file:' || location.port === '5500' || location.port === '8080')
       ? 'http://127.0.0.1:8000'
       : location.origin;
   </script>
@@ -1404,7 +1732,7 @@
           <button type="submit" class="btn btn-primary" style="width:100%;margin-top:.6rem">Request a Quote</button>
           <p class="reassure">No obligation &middot; We reply fast &middot; Your details stay private (POPIA)</p>
         </form>
-      </div>
+      </div>0
     </div>
   </div>
 
@@ -1488,42 +1816,5 @@
       </div>
     </div>
   </div>
-  <!-- Modal wiring: inline, no external deps, runs after DOM is parsed -->
-  <script>
-  (function () {
-    function openM(id) {
-      var m = document.getElementById(id);
-      if (!m) return;
-      m.hidden = false;
-      requestAnimationFrame(function () { m.classList.add('open'); });
-      document.body.style.overflow = 'hidden';
-    }
-    function closeM(m) {
-      m.classList.remove('open');
-      document.body.style.overflow = '';
-      setTimeout(function () { m.hidden = true; }, 220);
-    }
-    // Wire all open buttons
-    document.querySelectorAll('[data-open-modal]').forEach(function (b) {
-      b.addEventListener('click', function () { openM(b.dataset.openModal); }, { passive: true });
-    });
-    // Wire all close buttons and backdrops inside each modal
-    document.querySelectorAll('.amodal').forEach(function (m) {
-      m.querySelectorAll('[data-close-modal]').forEach(function (b) {
-        b.addEventListener('click', function () { closeM(m); }, { passive: true });
-      });
-    });
-    // Escape key
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') {
-        var o = document.querySelector('.amodal.open');
-        if (o) closeM(o);
-      }
-    });
-    // Expose so map-form.js can enhance (map init, form submit, etc.)
-    window._ascOpenModal = openM;
-    window._ascCloseModal = closeM;
-  })();
-  </script>
 </body>
 </html>

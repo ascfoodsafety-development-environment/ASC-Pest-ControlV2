@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ASC Pest Control Hub</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="../../../logo.png" />
+  <link rel="stylesheet" href="hub.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════ AUTH OVERLAY ═══════════════════════════ -->
+<div id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="../../../logo.png" alt="ASC Pest Control" />
+      <span>ASC Pest Control Hub</span>
+    </div>
+
+    <div class="auth-error" id="auth-error-msg"></div>
+
+    <!-- LOGIN -->
+    <div class="auth-step on" id="auth-step-login">
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Sign in with your email or phone. We'll send you a one-time code.</div>
+      <div class="field">
+        <label>Email or phone number</label>
+        <input class="auth-identifier" type="text" placeholder="you@example.co.za or 082 000 0000" autocomplete="username" />
+      </div>
+      <button class="auth-btn" id="hub-btn-request-otp" data-label="Send code">Send code</button>
+      <div class="auth-alt">New customer? <a onclick="hubShowAuth('register')">Create an account</a></div>
+    </div>
+
+    <!-- OTP -->
+    <div class="auth-step" id="auth-step-otp">
+      <div class="auth-title">Verify it's you</div>
+      <div class="auth-sub">We sent a 6-digit code to your email or phone. Enter it below.</div>
+      <div class="otp-boxes">
+        <input class="otp-box" maxlength="1" inputmode="numeric" autocomplete="one-time-code" />
+        <input class="otp-box" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" maxlength="1" inputmode="numeric" />
+        <input class="otp-box" maxlength="1" inputmode="numeric" />
+      </div>
+      <button class="auth-btn" id="hub-btn-verify-otp" data-label="Verify &amp; sign in">Verify &amp; sign in</button>
+      <div class="auth-alt"><a onclick="hubShowAuth('login')">← Back</a> &nbsp;·&nbsp; <a onclick="hubRequestOtp()">Resend code</a></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="auth-step" id="auth-step-register">
+      <div class="auth-title">Create your account</div>
+      <div class="auth-sub">Book services, view history and manage compliance in one place.</div>
+      <div class="field"><label>Full name</label><input type="text" placeholder="Thabo Mokoena" /></div>
+      <div class="field"><label>Email address</label><input type="email" placeholder="you@example.co.za" /></div>
+      <div class="field"><label>Mobile number</label><input type="tel" placeholder="082 000 0000" /></div>
+      <label class="auth-consent">
+        <input type="checkbox" checked />
+        I consent to ASC Pest Control processing my information to provide this service, in line with POPIA.
+      </label>
+      <button class="auth-btn" onclick="hubShowAuth('otp')">Create account &amp; send code</button>
+      <div class="auth-alt">Already registered? <a onclick="hubShowAuth('login')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ TOP BAR (shared) ═══════════════════════════ -->
+<header class="topbar">
+  <div class="brand">
+    <img src="../../../logo.png" alt="ASC" />
+    ASC Pest Control Hub
+  </div>
+  <span class="tag">SECURE PORTAL</span>
+  <div class="topbar-right">
+    <button class="signout-btn" id="hub-btn-signout" onclick="hubSignOut()">Sign out</button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════ CLIENT SCREEN ═══════════════════════════ -->
+<div class="screen" id="screen-client">
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="av sidebar-user-initials">C</div>
+      <div>
+        <div class="nm">My Account</div>
+        <div class="rl sidebar-role-label">customer</div>
+      </div>
+    </div>
+    <div class="nav-item on" data-nav-view="client">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      Overview
+    </div>
+    <div class="nav-item" data-nav-view="client">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      My Bookings
+    </div>
+    <div class="nav-item" data-nav-view="client">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><path d="M3 7h18v12H3z"/></svg>
+      Invoices
+    </div>
+    <div class="nav-item" data-nav-view="client">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>
+      Documents
+    </div>
+    <div class="sidebar-foot">ASC Pest Control Hub · v1.0</div>
+  </aside>
+  <main class="main">
+    <div class="page-top">
+      <div><h1>My Dashboard</h1><div class="sub">Your pest control services at a glance.</div></div>
+      <div class="page-top-actions">
+        <div class="bell-btn"><svg stroke="currentColor" stroke-width="1.7" fill="none" viewBox="0 0 24 24" width="18" height="18"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></div>
+        <button class="btn primary" onclick="hubNewBooking()">
+          <svg stroke="currentColor" stroke-width="2" fill="none" viewBox="0 0 24 24" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg>
+          Book a Service
+        </button>
+      </div>
+    </div>
+
+    <div class="grid g-4" style="margin-bottom:16px">
+      <div class="stat">
+        <div class="lab"><span class="dot" style="background:var(--blue-soft)"><svg stroke="currentColor" stroke-width="1.7" fill="none" viewBox="0 0 24 24" width="14" height="14" style="color:var(--blue)"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4"/></svg></span>Next service</div>
+        <div class="v" id="client-next-service">—</div>
+        <div class="d flat" id="client-next-service-note">Loading…</div>
+      </div>
+      <div class="stat">
+        <div class="lab"><span class="dot" style="background:var(--green-soft)"><svg stroke="currentColor" stroke-width="1.7" fill="none" viewBox="0 0 24 24" width="14" height="14" style="color:var(--green)"><path d="M20 6L9 17l-5-5"/></svg></span>Last service</div>
+        <div class="v" id="client-last-service">—</div>
+        <div class="d up">Completed</div>
+      </div>
+      <div class="stat">
+        <div class="lab"><span class="dot" style="background:var(--amber-soft)"><svg stroke="currentColor" stroke-width="1.7" fill="none" viewBox="0 0 24 24" width="14" height="14" style="color:var(--amber)"><path d="M3 7h18v12H3z"/></svg></span>Outstanding</div>
+        <div class="v" id="client-outstanding">R 0.00</div>
+        <div class="d down">Due invoices</div>
+      </div>
+      <div class="stat">
+        <div class="lab"><span class="dot" style="background:var(--orange-soft)"><svg stroke="currentColor" stroke-width="1.7" fill="none" viewBox="0 0 24 24" width="14" height="14" style="color:var(--orange)"><path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7z"/></svg></span>Plan</div>
+        <div class="v">Active</div>
+        <div class="d flat">ASC service plan</div>
+      </div>
+    </div>
+
+    <div class="grid g-2">
+      <div class="card">
+        <div class="hd"><h3>Invoices</h3><a>All invoices</a></div>
+        <div class="bd" style="padding:6px 16px">
+          <table><tbody id="client-invoices-tbody">
+            <tr><td colspan="4" class="empty-state">Loading…</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="hd"><h3>Documents</h3><a>All</a></div>
+        <div class="bd">
+          <div class="empty-state">Service certificates and reports will appear here after your first service.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════════════════════ ADMIN SCREEN ═══════════════════════════ -->
+<div class="screen" id="screen-admin">
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="av sidebar-user-initials" style="background:var(--blue)">AS</div>
+      <div>
+        <div class="nm">Operations</div>
+        <div class="rl sidebar-role-label">admin</div>
+      </div>
+    </div>
+    <div class="nav-label">Operations</div>
+    <div class="nav-item on" data-nav-view="admin">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" data-nav-view="admin">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      Leads / CRM
+    </div>
+    <div class="nav-item" data-nav-view="admin">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Scheduling
+    </div>
+    <div class="nav-item" data-nav-view="admin">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><path d="M3 7h18v12H3z"/></svg>
+      Invoices
+    </div>
+    <div class="nav-label">Field</div>
+    <div class="nav-item" data-nav-view="technician">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><path d="M12 2a7 7 0 0 1 7 7c0 4-3 5-3 8H8c0-3-3-4-3-8a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg>
+      Technicians
+    </div>
+    <div class="sidebar-foot">ASC Hub · Admin</div>
+  </aside>
+  <main class="main">
+    <div class="page-top">
+      <div><h1>Operations Dashboard</h1><div class="sub" id="admin-date-sub">Loading…</div></div>
+      <div class="page-top-actions">
+        <button class="btn ghost" onclick="hubNewBooking()">New booking</button>
+        <button class="btn primary">New invoice</button>
+      </div>
+    </div>
+
+    <div class="grid g-4" style="margin-bottom:16px">
+      <div class="stat"><div class="lab">Total leads</div><div class="v" id="admin-stat-leads">—</div><div class="d flat">All time</div></div>
+      <div class="stat"><div class="lab">New this week</div><div class="v" id="admin-stat-new-leads">—</div><div class="d up">New leads</div></div>
+      <div class="stat"><div class="lab">Conversion rate</div><div class="v" id="admin-stat-conversion">—</div><div class="d flat">Lead → quote</div></div>
+      <div class="stat"><div class="lab">Overdue invoices</div><div class="v" id="admin-stat-overdue">—</div><div class="d down">Action required</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="hd"><h3>Lead pipeline</h3><a>Open CRM</a></div>
+      <div class="bd" id="admin-leads-table"><div class="empty-state">Loading leads…</div></div>
+    </div>
+
+    <div class="grid g-2">
+      <div class="card">
+        <div class="hd"><h3>Today's schedule</h3><a>Full calendar</a></div>
+        <div class="bd" style="padding:6px 16px">
+          <table>
+            <thead><tr><th>Time</th><th>Job</th><th>Technician</th><th>Status</th></tr></thead>
+            <tbody id="admin-schedule-tbody"><tr><td colspan="4" class="empty-state">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="hd"><h3>Recent invoices</h3><a>All invoices</a></div>
+        <div class="bd" style="padding:6px 16px">
+          <table>
+            <thead><tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody id="admin-invoices-tbody"><tr><td colspan="5" class="empty-state">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════════════════════ TECHNICIAN SCREEN ═══════════════════════════ -->
+<div class="screen" id="screen-technician">
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="av sidebar-user-initials">T</div>
+      <div>
+        <div class="nm">Field App</div>
+        <div class="rl sidebar-role-label">technician</div>
+      </div>
+    </div>
+    <div class="nav-item on" data-nav-view="technician">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      My Jobs Today
+    </div>
+    <div class="nav-item" data-nav-view="technician">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      My Schedule
+    </div>
+    <div class="sidebar-foot">ASC Hub · Field</div>
+  </aside>
+  <main class="main">
+    <div class="page-top">
+      <div><h1>Field App</h1><div class="sub">Your jobs for today.</div></div>
+      <div class="page-top-actions"><span class="badge b-green" id="tech-sync-badge">● Synced</span></div>
+    </div>
+    <div class="card">
+      <div class="hd"><h3>Today's route</h3><a>Full schedule</a></div>
+      <div class="bd" id="tech-jobs-list">
+        <div class="empty-state">Loading your jobs…</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════════════════════ ORG SCREEN ═══════════════════════════ -->
+<div class="screen" id="screen-org">
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="av sidebar-user-initials" style="background:var(--blue)">LD</div>
+      <div>
+        <div class="nm">Organisation</div>
+        <div class="rl sidebar-role-label">branch_manager</div>
+      </div>
+    </div>
+    <div class="nav-label">My Organisation</div>
+    <div class="nav-item on" data-nav-view="org">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+      Sites Overview
+    </div>
+    <div class="nav-item" data-nav-view="org">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><path d="M6 2h9l5 5v15H6z"/><path d="M9 13h6M9 17h6"/></svg>
+      Compliance Docs
+    </div>
+    <div class="nav-item" data-nav-view="org">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+      Trends &amp; Reports
+    </div>
+    <div class="nav-item" data-nav-view="org">
+      <svg stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="17" height="17"><path d="M3 7h18v12H3z"/></svg>
+      Billing
+    </div>
+    <div class="sidebar-foot">Multi-site portal</div>
+  </aside>
+  <main class="main">
+    <div class="page-top">
+      <div><h1>Organisation Overview</h1><div class="sub">All sites and compliance status.</div></div>
+      <div class="page-top-actions">
+        <button class="btn ghost">Export audit pack</button>
+        <div class="bell-btn"><svg stroke="currentColor" stroke-width="1.7" fill="none" viewBox="0 0 24 24" width="18" height="18"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></div>
+      </div>
+    </div>
+
+    <div class="grid g-4" style="margin-bottom:16px">
+      <div class="stat"><div class="lab">Sites monitored</div><div class="v" id="org-stat-sites">—</div><div class="d up">All active</div></div>
+      <div class="stat"><div class="lab">Avg. audit readiness</div><div class="v" id="org-stat-readiness">—</div><div class="d up">vs last quarter</div></div>
+      <div class="stat"><div class="lab">Open recommendations</div><div class="v" id="org-stat-recs">—</div><div class="d down">Action required</div></div>
+      <div class="stat"><div class="lab">Next audit</div><div class="v" id="org-stat-audit">—</div><div class="d flat">BRCGS surveillance</div></div>
+    </div>
+
+    <div class="card">
+      <div class="hd"><h3>Lead &amp; compliance pipeline</h3><a>View all</a></div>
+      <div class="bd" id="org-leads-table"><div class="empty-state">Loading…</div></div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════════════════════ Scripts ═══════════════════════════ -->
+<script>
+  window.ASC_API_BASE = (
+    location.protocol === "file:" ||
+    location.hostname === "localhost" ||
+    location.hostname === "127.0.0.1" ||
+    location.port === "5500" ||
+    location.port === "8080"
+  ) ? "http://127.0.0.1:8000" : location.origin;
+</script>
+<script src="permissions.js"></script>
+<script src="hub.js"></script>
+<script>
+  // Set admin date subtitle
+  const adminSub = document.getElementById("admin-date-sub");
+  if (adminSub) adminSub.textContent = new Date().toLocaleDateString("en-ZA", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+</script>
+</body>
+</html>
